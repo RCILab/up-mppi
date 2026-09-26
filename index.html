@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a22">
+  <meta name="description" content="UP-MPPI: a unified projection framework for motion and wrench constraints under model uncertainty. Theory, simulation films, and experimental results.">
+  <meta name="robots" content="noindex">
+  <meta property="og:title" content="UP-MPPI · Unified Projection MPPI">
+  <meta property="og:description" content="Motion and Wrench Constraints under Model Uncertainty. Explore the method and simulation studies.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/images/hero-dualarm.jpg">
+  <title>UP-MPPI | Unified Projection MPPI</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/mark.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="assets/data/results.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="UP-MPPI home"><svg viewBox="0 0 36 32" aria-hidden="true"><path d="M3 5 20 16 3 27M3 16h27"/><circle cx="29" cy="16" r="4"/></svg><span>UP-MPPI</span><span class="brand-detail">PROJECT PAGE</span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu <span aria-hidden="true">＋</span></button>
+      <nav id="nav" aria-label="Main navigation">
+        <a href="#idea">The idea</a><a href="#experiments">Experiments</a><a href="#method">Method</a><a href="#results">Results</a><a class="nav-paper" href="#resources">Paper &amp; resources <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="title">
+      <div class="wrap hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="status-dot"></span> CONSTRAINED CONTROL · MODEL UNCERTAINTY</p>
+          <h1 id="title"><span class="wordmark"><span>UP</span>-MPPI</span><span class="full-title">Unified Projection MPPI:<br>Motion and Wrench Constraints<br class="wide-only"> under Model Uncertainty</span></h1>
+          <p class="hero-lead">Control the motion.<br> Respect the interaction.<br><em>Account for what is unknown.</em></p>
+          <p class="byline">Anonymous authors</p>
+          <div class="actions"><a class="button primary" href="#experiments">Watch the experiments <span aria-hidden="true">↘</span></a><button class="button ghost" type="button" disabled>Paper <span>TBD</span></button></div>
+          <p class="publication">In preparation for submission to<br><strong>IEEE Transactions on Robotics</strong></p>
+        </div>
+        <figure class="hero-media">
+          <div class="hero-view">
+            <div class="media-kicker"><span class="status-dot"></span> SIMULATION REPLAY <span id="hero-count">01 / 03</span></div>
+            <video id="hero-video" muted loop playsinline preload="metadata" poster="assets/images/hero-dualarm.jpg" aria-label="Simulated dual-arm transport using the unified controller" aria-describedby="hero-description"><source src="assets/videos/hero-dualarm.mp4" type="video/mp4"></video>
+            <div class="hero-overlay"><span id="hero-category">CLOSED-CHAIN MANIPULATION</span><strong id="hero-caption">Two arms. One constrained motion.</strong></div>
+            <button id="hero-play" class="play-toggle" type="button" aria-label="Play simulation replay"><span aria-hidden="true">▶</span> <span>Play</span></button>
+          </div>
+          <div class="scene-tabs" role="group" aria-label="Choose a simulation replay"><button class="active" data-scene="dualarm" aria-pressed="true"><span>01</span> Dual-arm transport</button><button data-scene="writing" aria-pressed="false"><span>02</span> Surface writing</button><button data-scene="waiter" aria-pressed="false"><span>03</span> Uncertain payload</button></div>
+          <figcaption id="hero-description">Saved MuJoCo trajectories, re-rendered for this page. Comparison films and study details below.</figcaption>
+        </figure>
+      </div>
+      <div class="wrap constraint-strip"><div><span>01 / MOTION</span><p>Keep the geometry.</p></div><div><span>02 / WRENCH</span><p>Constrain the interaction.</p></div><div><span>03 / UNCERTAINTY</span><p>Adapt the admissible set.</p></div><a href="#idea" aria-label="Explore the central idea">↓</a></div>
+    </section>
+
+    <section class="section idea" id="idea" aria-labelledby="idea-title">
+      <div class="wrap">
+        <p class="eyebrow section-label">01 / THE CENTRAL IDEA</p>
+        <div class="section-heading"><h2 id="idea-title">Motion and force.<br><span class="muted-heading">A shared geometry.</span></h2><p>Some constraints are enforced by the environment. Others must be enforced by the controller. UP-MPPI makes that distinction explicit, then projects sampled inputs into a common admissible set.</p></div>
+        <div class="idea-layout">
+          <div class="idea-copy">
+            <article class="idea-row"><span class="row-mark motion-mark">M</span><div><h3>Physical contact creates a reaction.</h3><p>A surface or a closed chain changes the realized motion and generates a wrench. Its geometry and reaction belong in the contact dynamics.</p></div></article>
+            <article class="idea-row"><span class="row-mark wrench-mark">V</span><div><h3>Virtual constraints need control.</h3><p>Pen orientation and tray levelness do not create physical reactions. They become explicit control constraints.</p></div></article>
+            <article class="idea-row"><span class="row-mark uncertainty-mark">Θ</span><div><h3>Unknown parameters define a family.</h3><p>Robust projection enforces the constraints across an uncertainty set. Bounded-error measurements can shrink that set over time.</p></div></article>
+          </div>
+          <figure class="geometry-card">
+            <div class="figure-top"><span class="eyebrow">EXPLORE THE PROJECTION</span><span class="small-tag">Interactive</span></div>
+            <svg id="projection" viewBox="0 0 600 340" role="img" aria-labelledby="projection-title projection-description"><title id="projection-title">A schematic two-dimensional admissible input set</title><desc id="projection-description">Gray samples are projected into the green intersection of motion and wrench constraints. A black diamond shows the weighted mean. Move the uncertainty slider to change the wrench constraints.</desc><defs><pattern id="small-grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke="#e3e6df" stroke-width=".7"/></pattern></defs><rect x="30" y="15" width="540" height="295" fill="url(#small-grid)"/><path d="M50 165H556M300 30V301" stroke="#d4d8d0"/><text x="550" y="188" class="svg-axis">u₁</text><text x="313" y="34" class="svg-axis">u₂</text><path id="motion-region" d="M132 80H468V250H132Z" fill="#dce8f9" fill-opacity=".65" stroke="#6b91bc" stroke-dasharray="4 5"/><g id="wrench-region"></g><polygon id="feasible-region" fill="#c9dd8e" fill-opacity=".8" stroke="#55732d" stroke-width="1.5"/><g id="projection-lines"></g><g id="raw-samples"></g><g id="projected-samples"></g><path id="weighted-mean" d="M0 -7 7 0 0 7 -7 0Z" fill="#14241f" stroke="#fff" stroke-width="2"/></svg>
+            <div class="plot-legend"><span><i class="legend-dot raw"></i>Raw sample</span><span><i class="legend-dot projected"></i>Projected</span><span><i class="legend-diamond"></i>Weighted mean</span></div>
+            <div class="slider-label"><label for="uncertainty">Model uncertainty</label><output id="uncertainty-value" for="uncertainty">Moderate</output></div><input id="uncertainty" type="range" min="0" max="100" value="48" aria-describedby="projection-note"><div class="range-ends"><span>Less uncertainty</span><span>More uncertainty</span></div>
+            <figcaption id="projection-note">Illustrative 2D geometry, not experimental data. Blue: motion constraints. Orange: wrench constraints. Green: their intersection. At a shared initial state, the weighted mean remains feasible.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section experiments" id="experiments" aria-labelledby="experiments-title">
+      <div class="wrap">
+        <p class="eyebrow section-label">02 / SEE IT IN MOTION</p>
+        <div class="section-heading"><h2 id="experiments-title">Three tasks.<br>One set of principles.</h2><p>From a pen on a curved surface to an uncertain load on a tray. Each simulation exposes a different consequence of how constraints are modeled.</p></div>
+        <div class="film-tabs" role="tablist" aria-label="Experiment"><button id="tab-writing" role="tab" aria-controls="panel-writing" aria-selected="true" tabindex="0"><span>01</span> Surface writing</button><button id="tab-dualarm" role="tab" aria-controls="panel-dualarm" aria-selected="false" tabindex="-1"><span>02</span> Dual-arm transport</button><button id="tab-waiter" role="tab" aria-controls="panel-waiter" aria-selected="false" tabindex="-1"><span>03</span> Uncertain payload</button></div>
+        <div class="film-panel" id="panel-writing" role="tabpanel" aria-labelledby="tab-writing">
+          <figure class="film"><video controls playsinline preload="none" poster="assets/images/writing.jpg" aria-describedby="writing-caption"><source src="assets/videos/writing.mp4" type="video/mp4">Your browser does not support embedded video. <a href="assets/videos/writing.mp4">Download the film.</a></video><figcaption id="writing-caption">8 s · MuJoCo · saved seed-0 replay · 1× playback <a href="assets/videos/writing.mp4" download>Download MP4 ↓</a></figcaption></figure>
+          <div class="film-copy"><span class="small-tag">GEOMETRY + REACTION + ORIENTATION</span><h3>Keep the contact.<br>Control the pressure.</h3><p>The pen traces a figure-eight on a spherical board while maintaining a 2–4 N contact-force band and a desired orientation.</p><dl class="film-metrics"><div><dt>99.3<span>%</span></dt><dd>Measured force in band</dd></div><div><dt>0.11<span>°</span></dt><dd>Orientation RMSE</dd></div></dl><p class="metric-scope">UP-MPPI · mean over 3 seeds at zero board offset.</p><div class="reading-note"><h4>How to read the film</h4><p>Top: PR with the modeled board 1 mm too low or 0.5 mm too high. Bottom left: an ablation that treats pen orientation as a physical contact constraint. Bottom right: UP-MPPI. The ablation is distinct from the standard CAMP baseline.</p><p>Ink: black in band, red above 4 N, gray below 2 N.</p></div><a class="text-link" href="#writing-results">Compare the measurements <span>↗</span></a></div>
+        </div>
+        <div class="film-panel" id="panel-dualarm" role="tabpanel" aria-labelledby="tab-dualarm" hidden>
+          <figure class="film"><video controls playsinline preload="none" poster="assets/images/dualarm.jpg" aria-describedby="dual-caption"><source src="assets/videos/dualarm.mp4" type="video/mp4">Your browser does not support embedded video. <a href="assets/videos/dualarm.mp4">Download the film.</a></video><figcaption id="dual-caption">6 s · MuJoCo · 14 DoF · 1× playback <a href="assets/videos/dualarm.mp4" download>Download MP4 ↓</a></figcaption></figure>
+          <div class="film-copy"><span class="small-tag">CLOSED CHAIN + CALIBRATION ERROR</span><h3>A small offset.<br>A large internal force.</h3><p>Two arms carry one tray. Retracting to an incorrectly calibrated closed chain can turn a 2 mm base error into internal loading.</p><dl class="film-metrics"><div><dt>15.23<span>N</span></dt><dd>PR internal force</dd></div><div><dt>1.87<span>N</span></dt><dd>UP-MPPI internal force</dd></div></dl><p class="metric-scope">Mean internal-force norm at 2 mm base error.</p><div class="reading-note"><h4>Four distinct comparisons</h4><p>Top: PR and anchored PR at 2 mm error. Bottom: PR without inequality projection at zero error, and UP-MPPI at 2 mm error. The red arrows visualize internal forces.</p><p>Anchored PR reaches 0.45 N in this setting; the methods make different geometry–force trade-offs.</p></div><a class="text-link" href="#dual-results">Explore the offset sweep <span>↗</span></a></div>
+        </div>
+        <div class="film-panel" id="panel-waiter" role="tabpanel" aria-labelledby="tab-waiter" hidden>
+          <figure class="film"><video controls playsinline preload="none" poster="assets/images/waiter.jpg" aria-describedby="waiter-caption"><source src="assets/videos/waiter.mp4" type="video/mp4">Your browser does not support embedded video. <a href="assets/videos/waiter.mp4">Download the film.</a></video><figcaption id="waiter-caption">8.6 s · MuJoCo · tracked-position variant · 0.5× playback <a href="assets/videos/waiter.mp4" download>Download MP4 ↓</a></figcaption></figure>
+          <div class="film-copy"><span class="small-tag">UNKNOWN PAYLOAD + ROBUST SUPPORT</span><h3>Carry what you<br>do not fully know.</h3><p>A nominal model underestimates the payload’s center-of-mass height. Robust constraints account for the full interval; measurements then reduce conservatism.</p><dl class="film-metrics"><div><dt>5<span>/5</span></dt><dd>Nominal runs tipped</dd></div><div><dt>0<span>/5</span></dt><dd>Robust runs tipped</dd></div></dl><p class="metric-scope">Main study · true CoM height 0.14 m · 5 seeds per method.</p><div class="reading-note"><h4>Two adaptive variants, clearly separated</h4><p>This saved film shows the tracked-position adaptive variant alongside nominal, robust, and oracle control. The newer F/T-only COP-difference variant is reported separately in the results below.</p><p>The film is an illustrative saved run, not an aggregate evaluation.</p></div><a class="text-link" href="#waiter-results">Compare adaptive variants <span>↗</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section method" id="method" aria-labelledby="method-title">
+      <div class="wrap">
+        <p class="eyebrow section-label">03 / THE FRAMEWORK</p>
+        <div class="section-heading"><h2 id="method-title">Project the samples.<br>Preserve the structure.</h2><p>Velocity-level geometry and acceleration-level contact dynamics share a projection framework. The structure determines when motion and reaction can be solved separately.</p></div>
+        <div class="method-flow"><article><span class="step-no">01</span><h3>Build the admissible set</h3><p>Separate physical contact from virtual constraints. Pull motion and wrench limits into the sampled input space, including uncertainty vertices where applicable.</p><div class="math">𝒜(x, Θ) = ⋂<sub>θ ∈ vert(Θ)</sub> 𝒜(x, θ)</div></article><article><span class="step-no">02</span><h3>Project each sample</h3><p>Find the nearest feasible input in a suitable metric. Use a motion–reaction split when the separation conditions hold, or a joint projection for coupled constraints.</p><div class="math">u* = arg min<sub>u ∈ 𝒜</sub> ½ ‖u − u<sub>raw</sub>‖²<sub>W</sub></div></article><article><span class="step-no">03</span><h3>Weight and execute</h3><p>Roll out the constrained dynamics and score each trajectory. Average projected first-step inputs at their shared measured state, then apply the order-specific execution rule.</p><div class="math">ū₀ = ∑<sub>k</sub> w<sub>k</sub> u*<sub>0,k</sub> ∈ 𝒜(x₀, Θ)</div></article></div>
+        <div class="theory-bottom"><div class="theory-callout"><span class="eyebrow">WHEN THE SPLIT IS EXACT</span><p>The inertia metric makes motion and reaction projections independent under the stated separation conditions. Torque limits or other coupled rows can require a joint solve.</p></div><div class="theory-callout"><span class="eyebrow">FROM MODEL TO EXECUTION</span><p>The basic certificate concerns the model wrench. A real-wrench guarantee additionally requires a valid model set and a bounded execution residual over the full control interval.</p></div></div>
+        <details class="technical-details"><summary>What is unified, and what is assumed? <span aria-hidden="true">＋</span></summary><div class="details-grid"><div><h3>Order 1 · geometric control</h3><p>Velocity projection with an identity metric connects to PR-MPPI. Retraction handles virtual geometry; anchoring addresses the force sensitivity of uncertain physical constraints.</p></div><div><h3>Order 2 · contact dynamics</h3><p>Inertia-weighted acceleration projection connects to CAMP-MPPI. Physical reactions follow constrained dynamics; virtual constraints remain controlled rows.</p></div><div><h3>Robustness and adaptation</h3><p>Vertex constraints apply to the manuscript’s multi-affine parameterization. Set-membership updates preserve true-parameter containment only with a valid prior and valid measurement-error bounds.</p></div><div><h3>Scope of the certificate</h3><p>The first-step weighted mean shares one convex set. Later horizon averages are warm starts. Finite-step execution and model-to-real tightening require the additional conditions in the theory draft.</p></div></div></details>
+      </div>
+    </section>
+
+    <section class="section results" id="results" aria-labelledby="results-title">
+      <div class="wrap">
+        <p class="eyebrow section-label">04 / SIMULATION EVIDENCE</p>
+        <div class="section-heading"><h2 id="results-title">The measurements<br>behind the motion.</h2><p>Saved development results from the CPU / MuJoCo implementation. The figures below report simulated measurements; they do not establish hardware performance or real-time computation.</p></div>
+        <article class="result-block" id="writing-results">
+          <div class="result-intro"><span class="result-number">01</span><h3>Writing with a force band<br>and a virtual orientation.</h3><p>At zero board offset, hard virtual rows improve orientation while preserving contact-force performance.</p></div>
+          <div class="result-content"><div class="table-scroll" tabindex="0" role="region" aria-label="Surface writing results"><table><caption>Curved-surface writing · zero offset · mean over 3 seeds</caption><thead><tr><th scope="col">Controller</th><th scope="col">Force in band ↑</th><th scope="col">Path RMSE ↓</th><th scope="col">Orientation RMSE ↓</th></tr></thead><tbody><tr><th scope="row">CAMP · orientation cost</th><td>99.1%</td><td>1.77 mm</td><td>0.72°</td></tr><tr><th scope="row">Orientation-as-contact ablation</th><td>42.1%</td><td>20.99 mm</td><td>25.54°</td></tr><tr class="highlight"><th scope="row">UP-MPPI</th><td>99.3%</td><td>1.56 mm</td><td>0.11°</td></tr><tr><th scope="row">UP-MPPI · identity metric</th><td>97.8%</td><td>1.58 mm</td><td>0.11°</td></tr></tbody></table></div><p class="result-note">The orientation-as-contact ablation diverged in 3/3 runs; its metrics cover the executed portion. The measured 99.3% in-band rate is distinct from feasibility of the commanded model wrench.</p></div>
+        </article>
+        <article class="result-block" id="dual-results">
+          <div class="result-intro"><span class="result-number">02</span><h3>Calibration error<br>becomes internal force.</h3><p>Change the base offset to inspect the saved dual-arm sweep. Anchoring and reaction constraints address different consequences of model mismatch.</p><label class="select-label" for="offset">Right-arm base error</label><select id="offset"><option value="0">0 mm</option><option value="0.5">0.5 mm</option><option value="1">1 mm</option><option value="2" selected>2 mm</option></select></div>
+          <div class="result-content"><div class="chart-title"><h4>Mean internal-force norm</h4><span>Lower is better · N</span></div><div id="dual-chart" class="bar-chart" role="img" aria-label="At 2 mm error: PR-MPPI 15.23 N, anchored PR 0.45 N, UP-MPPI 1.87 N"><div class="bar-row"><span>PR-MPPI</span><div class="bar-track"><div class="bar coral" style="width:89.57%"></div></div><strong>15.23 <small>N</small></strong></div><div class="bar-row"><span>Anchored PR</span><div class="bar-track"><div class="bar blue" style="width:2.66%"></div></div><strong>0.45 <small>N</small></strong></div><div class="bar-row"><span>UP-MPPI</span><div class="bar-track"><div class="bar green" style="width:10.99%"></div></div><strong>1.87 <small>N</small></strong></div><div class="chart-scale"><span>0</span><span>8.5</span><span>17 N</span></div></div><p id="dual-announcement" class="sr-only" aria-live="polite"></p><p class="result-note">A force comparison, not an overall ranking. In the nominal geometry test, PR has smaller measured chain and tilt errors than the acceleration-level unified controller.</p></div>
+        </article>
+        <article class="result-block" id="waiter-results">
+          <div class="result-intro"><span class="result-number">03</span><h3>Learn the load.<br>Recover performance.</h3><p>Robust control prevents tipping in the main study. Set-membership adaptation reduces the tracking gap to an oracle that knows the true height.</p><label class="select-label" for="height">True center-of-mass height</label><select id="height"><option value="0.08">0.08 m · 3 seeds</option><option value="0.11">0.11 m · 3 seeds</option><option value="0.14" selected>0.14 m · 5 seeds</option><option value="0.17">0.17 m · 3 seeds</option></select></div>
+          <div class="result-content"><div class="chart-title"><h4>Second-move path RMSE</h4><span>Lower is better · mm</span></div><div id="waiter-chart" class="bar-chart" role="img" aria-label="At 0.14 m: robust 47.3 mm, F/T-only adaptation 37.4 mm, tracked-position adaptation 36.1 mm, oracle 32.0 mm"><div class="bar-row"><span>Robust prior</span><div class="bar-track"><div class="bar gray" style="width:86%"></div></div><strong>47.3 <small>mm</small></strong></div><div class="bar-row"><span>Adaptive · F/T only</span><div class="bar-track"><div class="bar green" style="width:68.0%"></div></div><strong>37.4 <small>mm</small></strong></div><div class="bar-row"><span>Adaptive · tracked</span><div class="bar-track"><div class="bar blue" style="width:65.6%"></div></div><strong>36.1 <small>mm</small></strong></div><div class="bar-row"><span>Oracle</span><div class="bar-track"><div class="bar dark" style="width:58.2%"></div></div><strong>32.0 <small>mm</small></strong></div><div class="chart-scale"><span>0</span><span>27.5</span><span>55 mm</span></div></div><div class="gap-readout" aria-live="polite"><strong id="gap-value">65%</strong><p>of the robust-to-oracle tracking gap closed<br><span>by F/T-only COP-difference adaptation</span></p></div><p id="waiter-outcomes" class="result-note">At h = 0.14 m: nominal tipped in 5/5 runs; each plotted method tipped in 0/5. Nominal tracking is omitted because its runs terminated early.</p><p class="result-note">Gap closed = (robust RMSE − adaptive RMSE) / (robust RMSE − oracle RMSE). These are saved development runs with empirically calibrated error bounds; the bounds are assumptions, not universal worst-case guarantees.</p></div>
+        </article>
+        <div class="scope-note"><span class="scope-symbol" aria-hidden="true">↳</span><p><strong>Current evidence, current limits.</strong> Theory and simulation are available. Hardware validation and a real-time GPU implementation are pending. Robustness guarantees depend on the stated model and error bounds; a no-tip simulation outcome alone does not verify those assumptions.</p></div>
+      </div>
+    </section>
+
+    <section class="section resources" id="resources" aria-labelledby="resources-title">
+      <div class="wrap"><p class="eyebrow section-label">05 / READ &amp; EXPLORE</p><div class="section-heading"><h2 id="resources-title">The theory.<br>The evidence. The context.</h2><p>UP-MPPI is a research project in preparation for T-RO submission. These materials capture the current development stage.</p></div>
+        <div class="resource-grid"><article class="resource-card featured unavailable"><span class="resource-icon" aria-hidden="true">&#8801;</span><span class="resource-type">PAPER</span><h3>Manuscript in preparation</h3><p>Unified formulation, projection structure, uncertainty analysis, and simulation studies.</p><span class="resource-footer">Availability <span>TBD</span></span></article><a class="resource-card" href="assets/data/results.json" download><span class="resource-icon" aria-hidden="true">↧</span><span class="resource-type">RESULT SNAPSHOT</span><h3>Inspect the numbers</h3><p>Aggregated simulation metrics, source hashes, and notes identifying the variants in each film.</p><span class="resource-footer">JSON · 26 September 2026 <span>↓</span></span></a><a class="resource-card" href="https://rcilab.khu.ac.kr/CAMP-MPPI/" target="_blank" rel="noopener"><span class="resource-icon" aria-hidden="true">↗</span><span class="resource-type">RELATED WORK</span><h3>CAMP-MPPI</h3><p>Contact-Aware Manifold Projection MPPI for Hard Dynamics-Level Contact-Wrench Constraints.</p><span class="resource-footer">Project page <span>↗</span></span></a></div>
+        <p class="draft-note">Paper: TBD. Public code release is planned.</p>
+        <div class="lineage"><span class="eyebrow">RESEARCH LINEAGE</span><a href="https://anonymous.4open.science/w/prmppi/" target="_blank" rel="noopener"><strong>PR-MPPI</strong><span>Constraint-manifold control ↗</span></a><span class="lineage-plus" aria-hidden="true">+</span><a href="https://rcilab.khu.ac.kr/CAMP-MPPI/" target="_blank" rel="noopener"><strong>CAMP-MPPI</strong><span>Dynamics-level wrench constraints ↗</span></a><span class="lineage-plus" aria-hidden="true">→</span><div><strong>UP-MPPI</strong><span>Structure, unification, and uncertainty</span></div></div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap footer-inner"><a class="brand" href="#top">UP-MPPI</a><p>Unified Projection MPPI<br><span>Simulation study · Research in progress</span></p><a href="#top">Back to top ↑</a></div></footer>
+  <noscript><style>.film-panel[hidden]{display:grid!important}.film-tabs,.scene-tabs,.play-toggle,.menu-toggle{display:none!important}#nav{display:flex!important}.geometry-card input{pointer-events:none}.geometry-card svg{display:none}</style><p class="noscript-note">JavaScript enables the interactive diagrams and charts. All experiment films, result summaries, and downloads remain available.</p></noscript>
+</body>
+</html>

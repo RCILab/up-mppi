@@ -1,0 +1,559 @@
+{
+  "scope": "MuJoCo simulation; saved development results; not hardware validation",
+  "snapshot": "2026-09-26",
+  "writing": [
+    {
+      "method": "PR",
+      "offset": -1.0,
+      "n": 3,
+      "force": 15.973038630498571,
+      "inBand": 0.0,
+      "tracking": 1.2916724259117396,
+      "orientation": 0.04170871142098912
+    },
+    {
+      "method": "PR",
+      "offset": -0.5,
+      "n": 3,
+      "force": 7.98396438356027,
+      "inBand": 0.0,
+      "tracking": 1.1230969229916294,
+      "orientation": 0.020682915961884964
+    },
+    {
+      "method": "PR",
+      "offset": 0.0,
+      "n": 3,
+      "force": 0.0010236717886940212,
+      "inBand": 0.0,
+      "tracking": 1.0895973056248731,
+      "orientation": 0.0014000409891211166
+    },
+    {
+      "method": "PR",
+      "offset": 0.5,
+      "n": 3,
+      "force": 0.0,
+      "inBand": 0.0,
+      "tracking": 1.1985257107823102,
+      "orientation": 0.0014089250260669334
+    },
+    {
+      "method": "PR",
+      "offset": 1.0,
+      "n": 3,
+      "force": 0.0,
+      "inBand": 0.0,
+      "tracking": 1.4784185057009829,
+      "orientation": 0.0014306757932240472
+    },
+    {
+      "method": "PR-anchored",
+      "offset": -1.0,
+      "n": 3,
+      "force": 0.0,
+      "inBand": 0.0,
+      "tracking": 1.0932825371291373,
+      "orientation": 0.0014044605956436567
+    },
+    {
+      "method": "PR-anchored",
+      "offset": -0.5,
+      "n": 3,
+      "force": 0.0,
+      "inBand": 0.0,
+      "tracking": 1.0932825371291373,
+      "orientation": 0.0014044605956436567
+    },
+    {
+      "method": "PR-anchored",
+      "offset": 0.0,
+      "n": 3,
+      "force": 0.0,
+      "inBand": 0.0,
+      "tracking": 1.0932825371291373,
+      "orientation": 0.0014044605956436567
+    },
+    {
+      "method": "PR-anchored",
+      "offset": 0.5,
+      "n": 3,
+      "force": 0.0,
+      "inBand": 0.0,
+      "tracking": 1.0932825371291373,
+      "orientation": 0.0014044605956436567
+    },
+    {
+      "method": "PR-anchored",
+      "offset": 1.0,
+      "n": 3,
+      "force": 0.0,
+      "inBand": 0.0,
+      "tracking": 1.0932825371291373,
+      "orientation": 0.0014044605956436567
+    },
+    {
+      "method": "CAMP",
+      "offset": -1.0,
+      "n": 3,
+      "force": 3.0363006721975903,
+      "inBand": 99.07555555555555,
+      "tracking": 1.7689741699987722,
+      "orientation": 0.7182097240189677
+    },
+    {
+      "method": "CAMP",
+      "offset": -0.5,
+      "n": 3,
+      "force": 3.0363006721975903,
+      "inBand": 99.07555555555555,
+      "tracking": 1.7689741699987722,
+      "orientation": 0.7182097240189677
+    },
+    {
+      "method": "CAMP",
+      "offset": 0.0,
+      "n": 3,
+      "force": 3.0363006721975903,
+      "inBand": 99.07555555555555,
+      "tracking": 1.7689741699987722,
+      "orientation": 0.7182097240189677
+    },
+    {
+      "method": "CAMP",
+      "offset": 0.5,
+      "n": 3,
+      "force": 3.0363006721975894,
+      "inBand": 99.07555555555555,
+      "tracking": 1.7689741699987722,
+      "orientation": 0.7182097240189677
+    },
+    {
+      "method": "CAMP",
+      "offset": 1.0,
+      "n": 3,
+      "force": 3.0363006721975894,
+      "inBand": 99.07555555555555,
+      "tracking": 1.7689741699987722,
+      "orientation": 0.7182097240189677
+    },
+    {
+      "method": "CAMP-manifold",
+      "offset": -1.0,
+      "n": 3,
+      "force": 1.9127772586294582,
+      "inBand": 42.14945334389608,
+      "tracking": 20.989336014717974,
+      "orientation": 25.541181593208538
+    },
+    {
+      "method": "CAMP-manifold",
+      "offset": -0.5,
+      "n": 3,
+      "force": 1.9127772586294582,
+      "inBand": 42.14945334389608,
+      "tracking": 20.989336014717974,
+      "orientation": 25.541181593208538
+    },
+    {
+      "method": "CAMP-manifold",
+      "offset": 0.0,
+      "n": 3,
+      "force": 1.9127772586294582,
+      "inBand": 42.14945334389608,
+      "tracking": 20.989336014717974,
+      "orientation": 25.541181593208538
+    },
+    {
+      "method": "CAMP-manifold",
+      "offset": 0.5,
+      "n": 3,
+      "force": 1.9127772586294582,
+      "inBand": 42.14945334389608,
+      "tracking": 20.989336014717974,
+      "orientation": 25.541181593208538
+    },
+    {
+      "method": "CAMP-manifold",
+      "offset": 1.0,
+      "n": 3,
+      "force": 1.9127772586294582,
+      "inBand": 42.14945334389608,
+      "tracking": 20.989336014717974,
+      "orientation": 25.541181593208538
+    },
+    {
+      "method": "Unified",
+      "offset": -1.0,
+      "n": 3,
+      "force": 3.0325545164252357,
+      "inBand": 99.34222222222223,
+      "tracking": 1.559627835701692,
+      "orientation": 0.10683712453153826
+    },
+    {
+      "method": "Unified",
+      "offset": -0.5,
+      "n": 3,
+      "force": 3.0325545164252357,
+      "inBand": 99.34222222222222,
+      "tracking": 1.559627835701692,
+      "orientation": 0.10683712453153826
+    },
+    {
+      "method": "Unified",
+      "offset": 0.0,
+      "n": 3,
+      "force": 3.0325545164252357,
+      "inBand": 99.34222222222223,
+      "tracking": 1.559627835701692,
+      "orientation": 0.10683712453153826
+    },
+    {
+      "method": "Unified",
+      "offset": 0.5,
+      "n": 3,
+      "force": 3.0325545164252357,
+      "inBand": 99.34222222222222,
+      "tracking": 1.559627835701692,
+      "orientation": 0.10683712453153826
+    },
+    {
+      "method": "Unified",
+      "offset": 1.0,
+      "n": 3,
+      "force": 3.0325545164252357,
+      "inBand": 99.34222222222222,
+      "tracking": 1.559627835701692,
+      "orientation": 0.10683712453153826
+    },
+    {
+      "method": "Unified-joint",
+      "offset": -1.0,
+      "n": 3,
+      "force": 3.032554516425229,
+      "inBand": 99.34222222222222,
+      "tracking": 1.5596278357016995,
+      "orientation": 0.10683712453226914
+    },
+    {
+      "method": "Unified-joint",
+      "offset": -0.5,
+      "n": 3,
+      "force": 3.032554516425229,
+      "inBand": 99.34222222222222,
+      "tracking": 1.5596278357016995,
+      "orientation": 0.10683712453226914
+    },
+    {
+      "method": "Unified-joint",
+      "offset": 0.0,
+      "n": 3,
+      "force": 3.032554516425229,
+      "inBand": 99.34222222222223,
+      "tracking": 1.559627835701699,
+      "orientation": 0.10683712453226912
+    },
+    {
+      "method": "Unified-joint",
+      "offset": 0.5,
+      "n": 3,
+      "force": 3.032554516425229,
+      "inBand": 99.34222222222222,
+      "tracking": 1.5596278357016995,
+      "orientation": 0.10683712453226914
+    },
+    {
+      "method": "Unified-joint",
+      "offset": 1.0,
+      "n": 3,
+      "force": 3.032554516425229,
+      "inBand": 99.34222222222222,
+      "tracking": 1.5596278357016995,
+      "orientation": 0.10683712453226914
+    },
+    {
+      "method": "Unified-W=I",
+      "offset": -1.0,
+      "n": 3,
+      "force": 3.049111447547093,
+      "inBand": 97.77333333333334,
+      "tracking": 1.5841191834078836,
+      "orientation": 0.10842618584787837
+    },
+    {
+      "method": "Unified-W=I",
+      "offset": -0.5,
+      "n": 3,
+      "force": 3.049111447547093,
+      "inBand": 97.77333333333333,
+      "tracking": 1.5841191834078838,
+      "orientation": 0.10842618584787835
+    },
+    {
+      "method": "Unified-W=I",
+      "offset": 0.0,
+      "n": 3,
+      "force": 3.049111447547093,
+      "inBand": 97.77333333333334,
+      "tracking": 1.5841191834078836,
+      "orientation": 0.10842618584787837
+    },
+    {
+      "method": "Unified-W=I",
+      "offset": 0.5,
+      "n": 3,
+      "force": 3.049111447547093,
+      "inBand": 97.77333333333333,
+      "tracking": 1.5841191834078838,
+      "orientation": 0.10842618584787835
+    },
+    {
+      "method": "Unified-W=I",
+      "offset": 1.0,
+      "n": 3,
+      "force": 3.049111447547093,
+      "inBand": 97.77333333333333,
+      "tracking": 1.5841191834078838,
+      "orientation": 0.10842618584787835
+    }
+  ],
+  "dual": {
+    "PR": [
+      {
+        "offset": 0.0,
+        "force": 0.47135774644198697
+      },
+      {
+        "offset": 0.5,
+        "force": 4.152881115822425
+      },
+      {
+        "offset": 1.0,
+        "force": 7.842661321178865
+      },
+      {
+        "offset": 2.0,
+        "force": 15.226996127372182
+      }
+    ],
+    "PR-anchored": [
+      {
+        "offset": 0.0,
+        "force": 0.47135774644198697
+      },
+      {
+        "offset": 0.5,
+        "force": 0.45166692111859263
+      },
+      {
+        "offset": 1.0,
+        "force": 0.4516646870928598
+      },
+      {
+        "offset": 2.0,
+        "force": 0.4516546772285503
+      }
+    ],
+    "Unified": [
+      {
+        "offset": 0.0,
+        "force": 1.8656795166171474
+      },
+      {
+        "offset": 0.5,
+        "force": 1.8664828045751733
+      },
+      {
+        "offset": 1.0,
+        "force": 1.867274227702696
+      },
+      {
+        "offset": 2.0,
+        "force": 1.8688180787299462
+      }
+    ]
+  },
+  "waiter": {
+    "nominal": {
+      "n": 5,
+      "tipped": 5,
+      "rmse": null,
+      "reach": null,
+      "peak": 2.1558671059959713
+    },
+    "robust": {
+      "n": 5,
+      "tipped": 0,
+      "rmse": 47.303608539996986,
+      "reach": 1.564,
+      "peak": 1.0058111218378731
+    },
+    "adaptive": {
+      "n": 5,
+      "tipped": 0,
+      "rmse": 45.64578107231748,
+      "reach": 1.2400000000000004,
+      "peak": 1.0261697824216818
+    },
+    "adaptive-cop": {
+      "n": 5,
+      "tipped": 0,
+      "rmse": 37.40647212185407,
+      "reach": 0.9240000000000004,
+      "peak": 1.1708705738635206
+    },
+    "adaptive-tracked": {
+      "n": 5,
+      "tipped": 0,
+      "rmse": 36.10032214832269,
+      "reach": 0.9120000000000005,
+      "peak": 1.2000600449304137
+    },
+    "oracle": {
+      "n": 5,
+      "tipped": 0,
+      "rmse": 32.03692875044261,
+      "reach": 0.8880000000000002,
+      "peak": 1.2940467627278314
+    }
+  },
+  "waiterSweep": {
+    "nominal|0.08": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 20.528510145787738,
+      "truth": false
+    },
+    "nominal|0.11": {
+      "n": 3,
+      "tipped": 2,
+      "rmse2": 20.383679760567933,
+      "truth": false
+    },
+    "nominal|0.14": {
+      "n": 5,
+      "tipped": 5,
+      "rmse2": null,
+      "truth": false
+    },
+    "nominal|0.17": {
+      "n": 3,
+      "tipped": 3,
+      "rmse2": null,
+      "truth": false
+    },
+    "robust|0.08": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 48.05253968018442,
+      "truth": true
+    },
+    "robust|0.11": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 48.05565913626295,
+      "truth": true
+    },
+    "robust|0.14": {
+      "n": 5,
+      "tipped": 0,
+      "rmse2": 47.303608539996986,
+      "truth": true
+    },
+    "robust|0.17": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 48.05617720822999,
+      "truth": true
+    },
+    "adaptive-cop|0.08": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 21.68417745053846,
+      "truth": true
+    },
+    "adaptive-cop|0.11": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 26.945847892603897,
+      "truth": true
+    },
+    "adaptive-cop|0.14": {
+      "n": 5,
+      "tipped": 0,
+      "rmse2": 37.40647212185407,
+      "truth": true
+    },
+    "adaptive-cop|0.17": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 48.05807127090466,
+      "truth": true
+    },
+    "adaptive-tracked|0.08": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 21.61095298187847,
+      "truth": true
+    },
+    "adaptive-tracked|0.11": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 26.129545788213658,
+      "truth": true
+    },
+    "adaptive-tracked|0.14": {
+      "n": 5,
+      "tipped": 0,
+      "rmse2": 36.10032214832269,
+      "truth": true
+    },
+    "adaptive-tracked|0.17": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 48.05807127090466,
+      "truth": true
+    },
+    "oracle|0.08": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 21.009817668971966,
+      "truth": true
+    },
+    "oracle|0.11": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 24.198341084314148,
+      "truth": true
+    },
+    "oracle|0.14": {
+      "n": 5,
+      "tipped": 0,
+      "rmse2": 32.03692875044261,
+      "truth": true
+    },
+    "oracle|0.17": {
+      "n": 3,
+      "tipped": 0,
+      "rmse2": 44.25652969545887,
+      "truth": true
+    }
+  },
+  "sources": {
+    "experiments/results/writing_summary.json": "a1b532659b75800c14fbdebf1644adabc59eedb56d536ceec178a9e6365eee2d",
+    "experiments/results/dualarm_summary.json": "c7d9dca6440cf4ffa477378e08b9b6dbbace900588663dace8c3cdfe3ece9241",
+    "experiments/results/waiter_summary.json": "9edadb223ebd9052239c64964e76f14e74d372e3372527de344546da3b3e0083"
+  },
+  "videoNotes": {
+    "hero": "Re-rendered saved trajectories; visualization only; camera and lighting changed.",
+    "writing": "Seed 0; PR at -1 mm and +0.5 mm, CAMP with orientation incorrectly treated as physical, Unified at zero offset. Full task at 1x.",
+    "dual": "Saved calibration stress-test and inequality ablation replays; 1x.",
+    "waiter": "Existing clip uses adaptive-tracked (object position available), not the newer F/T-only COP variant; half-speed. Independent example from aggregate results."
+  },
+  "sourceModifiedAt": {
+    "experiments/results/writing_summary.json": "2026-09-26T18:47:18.260631+09:00",
+    "experiments/results/dualarm_summary.json": "2026-09-26T18:06:23.246591+09:00",
+    "experiments/results/waiter_summary.json": "2026-09-26T20:28:48.178520+09:00"
+  }
+}
