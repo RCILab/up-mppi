@@ -6,7 +6,7 @@ Static, self-contained project website. No Node, package installation, external 
 
 Project page: https://rcilab.khu.ac.kr/up-mppi/
 
-Hosted from the `main` branch of `RCILab/up-mppi` using GitHub Pages. Manuscripts, local rendering tools, and browser-check artifacts are excluded from this public repository.
+Hosted from the `main` branch of `RCILab/up-mppi` using GitHub Pages. The T-RO manuscript, local rendering tools, and browser-check artifacts are excluded from this public repository. The separately selected research note and code archive are available as study materials.
 
 ## Preview
 
@@ -26,9 +26,11 @@ Upload `index.html`, `style.css`, `app.js`, `.nojekyll`, and the entire `assets/
 
 ## Content and provenance
 
-- Paper availability is **TBD**. No manuscript PDF is included or copied by the asset preparation script; publication will be handled separately when ready.
+- Paper availability is **TBD**. The T-RO manuscript is not included or copied by the asset preparation script.
+- `assets/downloads/UP-MPPI_research_note_2026-09-27.pdf`: the 37-page working theory note, dated 27 September 2026.
+- `assets/downloads/UP-MPPI_code.zip`: accompanying controllers, experiment scripts, saved results, and reproduction instructions. Both downloads are exact copies of the selected `for_students/` files, published for study and discussion; they are linked from the hero and resource cards.
 - `assets/data/results.json`: aggregates from saved simulation runs, source SHA-256 hashes, video-run metrics, and hashes of the published MP4 files. `results.js` contains the same snapshot for local-file compatibility.
-- `assets/images/*-snapshots.png`: three comparison figures exported from the private manuscript's recorded-state renderings. Writing includes ink close-ups; dual-arm transport includes instantaneous force and joint margin; the waiter includes a matched nominal/adaptive timeline. `assets/data/visuals.json` records the image, source-figure, and simulation-recording hashes. No manuscript PDF is published.
+- `assets/images/*-snapshots.png`: three comparison figures exported from the private manuscript's recorded-state renderings. Writing includes ink close-ups; dual-arm transport includes instantaneous force and joint margin; the waiter includes a matched nominal/adaptive timeline. `assets/data/visuals.json` records the image, source-figure, and simulation-recording hashes. The T-RO manuscript PDF is not published.
 - The result overview reports three separate, explicitly labeled comparisons: 11% lower writing path RMSE versus CAMP, 26% lower second-move RMSE with F/T-only adaptation versus the robust prior, and 42% less writing planning time with separation versus joint projection. All derive from the frozen snapshot.
 - Blue rows identify UP-MPPI; bold numbers mark the best displayed value, including ties and other methods, among completed runs. Red identifies an exceeded execution-error bound or control period. Timing emphasis compares the two writing solvers only. Writing shows the 11.0% path and 85.1% orientation improvements over CAMP; similar force regulation is stated explicitly.
 - The controller uses a **raw motion mean and an average of projected reactions**, with a final motion projection and measured-state command reconstruction. The waiter has no physical reaction channel and reduces to raw averaging plus final projection. Its support rows additionally use execution-error tightening.
@@ -42,7 +44,7 @@ Upload `index.html`, `style.css`, `app.js`, `.nojekyll`, and the entire `assets/
 - All reported experiments are simulations; hardware validation remains future work. The waiter certificate is conditional on calibrated error bounds and concerns period-averaged wrench. No pointwise or universal safety claim is made.
 - The interactive 2D figure illustrates the **motion channel** under a diagonal metric. The separate projected-reaction average appears explicitly in the method equations.
 
-The active source snapshot is dated 27 September 2026 and is shared with the private manuscript. The website does not automatically synchronize with changing experiment files. It publishes aggregate results and media, with no manuscript PDF.
+The active source snapshot is dated 27 September 2026 and is shared with the private manuscript. The website does not automatically synchronize with changing experiment files. It publishes aggregate results, media, and the separately selected research note and code archive. The T-RO manuscript remains private.
 
 ## Refresh assets
 
@@ -54,7 +56,7 @@ python -X utf8 website/tools/build_revision.py
 python -X utf8 website/tools/export_paper_visuals.py
 ```
 
-The first command records writing and dual-arm seed-0 illustrations, checks their outcomes against the frozen results, retains validated waiter recordings, and renders videos and posters. The second imports the manuscript's shared aggregation helper, exports all metrics and provenance, updates HTML fallbacks, and applies the static table emphasis. The third exports only the three snapshot figures as PNGs, using PyMuPDF, and records their provenance. No manuscript is copied or published. Rendering needs the experiment dependencies (including Warp/PyTorch), MuJoCo, NumPy, Pillow and imageio-ffmpeg.
+The first command records writing and dual-arm seed-0 illustrations, checks their outcomes against the frozen results, retains validated waiter recordings, and renders videos and posters. The second imports the manuscript's shared aggregation helper, exports all metrics and provenance, updates HTML fallbacks, and applies the static table emphasis. The third exports only the three snapshot figures as PNGs, using PyMuPDF, and records their provenance. These scripts do not copy or publish a manuscript or update the separately selected downloads. Rendering needs the experiment dependencies (including Warp/PyTorch), MuJoCo, NumPy, Pillow and imageio-ffmpeg.
 
 Older export helpers are historical and must not be used to refresh current data. Dual-arm, waiter, averaging, comparison-task/margin and sample-count selectors read the published snapshot directly. Current default tables remain visible without JavaScript.
 

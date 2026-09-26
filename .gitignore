@@ -6,3 +6,7 @@ __pycache__/
 *.zip
 .DS_Store
 Thumbs.db
+
+# Public study materials explicitly selected for the project page.
+!/assets/downloads/UP-MPPI_research_note_2026-09-27.pdf
+!/assets/downloads/UP-MPPI_code.zip
