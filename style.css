@@ -229,7 +229,7 @@ select { display: block; width: min(100%, 250px); color: #3d5033; background: #f
 .scope-note p { font-size: 11px; color: #758168; line-height: 1.85; }
 .scope-note strong { color: #425739; font-weight: 650; }
 .resources { background: #eef1e8; border-top: 1px solid #e1e6d9; }
-.resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.resource-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .resource-card { display: flex; flex-direction: column; text-decoration: none; padding: 28px 28px 22px; border: 1px solid #d1dac7; border-radius: 5px; background: #f5f7ee; transition: background .2s, border-color .2s; }
 .resource-card:hover { border-color: #899e72; background: #fcfdf6; }
 .resource-card.featured { background: #e3ebd2; border-color: #c6d4af; }
