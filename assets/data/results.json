@@ -1,16 +1,16 @@
 {
   "scope": "MuJoCo simulation; saved development runs; no hardware or universal safety claim",
-  "snapshot": "2026-09-26",
-  "capturedAt": "2026-09-26T23:25:03.346032+09:00",
-  "algorithm": "Projected rollouts, raw weighted average, final execution projection; exploration clipped at 3 sigma",
+  "snapshot": "2026-09-27",
+  "algorithm": "Projected rollouts; raw motion mean and averaged projected reaction; final projection at the measured state",
   "executionBound": {
     "epsilon": 0.165037939279656,
     "unit": "m/s^2",
-    "scope": "Waiter period-averaged realized wrench; assumes the execution residual remains within the calibrated bound"
+    "scope": "Waiter period-averaged realized wrench, conditional on a valid execution-error bound"
   },
   "writing": [
     {
       "method": "CAMP",
+      "label": "CAMP \u00b7 orientation cost",
       "offset": 0.0,
       "n": 3,
       "force": 3.03630067219759,
@@ -21,6 +21,7 @@
     },
     {
       "method": "CAMP-manifold",
+      "label": "Orientation-as-contact ablation",
       "offset": 0.0,
       "n": 3,
       "force": 1.912777258629458,
@@ -31,35 +32,98 @@
     },
     {
       "method": "Unified",
+      "label": "UP-MPPI \u00b7 mixed update",
       "offset": 0.0,
       "n": 3,
-      "force": 2.076240882028292,
-      "inBand": 48.70222222222222,
-      "tracking": 1.3077916844632194,
-      "orientation": 0.08241091978603633,
+      "force": 3.0327722228160368,
+      "inBand": 99.30222222222223,
+      "tracking": 1.5751465469036745,
+      "orientation": 0.10677238009250965,
+      "diverged": 0
+    },
+    {
+      "method": "Unified-joint",
+      "label": "UP-MPPI \u00b7 joint projection",
+      "offset": 0.0,
+      "n": 3,
+      "force": 3.0327722228160336,
+      "inBand": 99.30222222222223,
+      "tracking": 1.5751465469036425,
+      "orientation": 0.106772380092339,
+      "diverged": 0
+    },
+    {
+      "method": "Unified-W=I",
+      "label": "Mixed update \u00b7 identity metric",
+      "offset": 0.0,
+      "n": 3,
+      "force": 3.2837624941595833,
+      "inBand": 16.826666666666668,
+      "tracking": 1.874010401941338,
+      "orientation": 0.1789105174098396,
       "diverged": 0
     }
   ],
   "dual": {
     "PR": [
       {
+        "offset": 0.0,
+        "force": 0.471357746441987,
+        "n": 3
+      },
+      {
+        "offset": 0.5,
+        "force": 4.152881115822425,
+        "n": 3
+      },
+      {
+        "offset": 1.0,
+        "force": 7.842661321178865,
+        "n": 3
+      },
+      {
         "offset": 2.0,
-        "force": 15.226990713130776,
-        "n": 1
+        "force": 15.226996127372182,
+        "n": 3
       }
     ],
     "PR-anchored": [
       {
+        "offset": 0.5,
+        "force": 0.4516669211185926,
+        "n": 3
+      },
+      {
+        "offset": 1.0,
+        "force": 0.4516646870928598,
+        "n": 3
+      },
+      {
         "offset": 2.0,
-        "force": 0.44998686974121505,
-        "n": 1
+        "force": 0.45165467722855024,
+        "n": 3
       }
     ],
     "Unified": [
       {
-        "offset": 2,
-        "force": 1.0210853952923558,
-        "n": 1
+        "offset": 0.0,
+        "force": 1.9978566054209042,
+        "n": 3
+      },
+      {
+        "offset": 0.5,
+        "force": 1.9989874628246895,
+        "n": 3
+      },
+      {
+        "offset": 1.0,
+        "force": 2.000215120132036,
+        "n": 3
+      },
+      {
+        "offset": 2.0,
+        "force": 2.0026973791265448,
+        "n": 3
       }
     ]
   },
@@ -309,25 +373,1340 @@
       "epsilon": 0.165037939279656
     }
   },
+  "comparators": {
+    "labels": {
+      "shield": "Shield adaptation",
+      "dualguard": "DualGuard adaptation",
+      "gs": "GS raw-mean adaptation"
+    },
+    "epsilon": 0.165037939279656,
+    "waiter": {
+      "untightened": [
+        {
+          "key": "up",
+          "label": "UP-MPPI",
+          "params": {},
+          "n": 5,
+          "tips": 0,
+          "rmse1": 30.154194616108057,
+          "rmse2": 31.88049403011252,
+          "rmse1Sd": 0.2123235712485416,
+          "rmse2Sd": 0.5497080745726131,
+          "modelRatio": 0.7777786946785513,
+          "copRatio": 0.7718518953310286,
+          "executionError": 0.07859648098277723,
+          "meanRunStepMs": 23.920923163139715
+        },
+        {
+          "key": "shield",
+          "label": "Shield adaptation",
+          "params": {
+            "C": 1000.0
+          },
+          "n": 5,
+          "tips": 0,
+          "rmse1": 40.516393217301584,
+          "rmse2": 40.223869897165294,
+          "rmse1Sd": 0.8464773889852661,
+          "rmse2Sd": 1.1353091364661254,
+          "modelRatio": 0.7774186048081242,
+          "copRatio": 0.7224128155324799,
+          "executionError": 0.06542086610549594,
+          "meanRunStepMs": 295.15122083882085
+        },
+        {
+          "key": "dualguard",
+          "label": "DualGuard adaptation",
+          "params": {},
+          "n": 5,
+          "tips": 0,
+          "rmse1": 85.40524699894796,
+          "rmse2": 114.08631152733713,
+          "rmse1Sd": 2.637189031754431,
+          "rmse2Sd": 9.78413174657398,
+          "modelRatio": 0.6011057628929816,
+          "copRatio": 0.5898011405832128,
+          "executionError": 0.20358457164557028,
+          "meanRunStepMs": 374.3927142339174
+        },
+        {
+          "key": "gs",
+          "label": "GS raw-mean adaptation",
+          "params": {
+            "rho": 100.0
+          },
+          "n": 5,
+          "tips": 0,
+          "rmse1": 30.162252171876432,
+          "rmse2": 32.07140219223354,
+          "rmse1Sd": 0.24292210581233575,
+          "rmse2Sd": 0.5010328959937339,
+          "modelRatio": 0.7777777782809818,
+          "copRatio": 0.7859769529825191,
+          "executionError": 0.07769737268354791,
+          "meanRunStepMs": 677.1652170212203
+        },
+        {
+          "key": "offline",
+          "label": "Offline robust plan",
+          "params": {},
+          "n": 1,
+          "tips": 0,
+          "rmse1": 23.138426194941026,
+          "rmse2": 22.20886902337413,
+          "rmse1Sd": 0.0,
+          "rmse2Sd": 0.0,
+          "modelRatio": 1.0203706204763787,
+          "copRatio": 0.9620134796464967,
+          "executionError": 0.10846697990056932,
+          "meanRunStepMs": 0.043484193900989926
+        },
+        {
+          "key": "online",
+          "label": "Online robust NMPC",
+          "params": {
+            "w_j": 0.1
+          },
+          "n": 1,
+          "tips": 0,
+          "rmse1": 34.45161099061443,
+          "rmse2": 37.058741887418996,
+          "rmse1Sd": 0.0,
+          "rmse2Sd": 0.0,
+          "modelRatio": 0.7777778127755464,
+          "copRatio": 0.7438645736811459,
+          "executionError": 0.060389929435574426,
+          "meanRunStepMs": 435.94520744369476
+        }
+      ],
+      "tightened": [
+        {
+          "key": "up",
+          "label": "UP-MPPI",
+          "params": {},
+          "n": 5,
+          "tips": 0,
+          "rmse1": 39.16784912671667,
+          "rmse2": 41.157749626748355,
+          "rmse1Sd": 0.6309455351742301,
+          "rmse2Sd": 1.278330738804043,
+          "modelRatio": 0.658831904282586,
+          "copRatio": 0.6346585886535098,
+          "executionError": 0.06304073046933657,
+          "meanRunStepMs": 28.19958818697392
+        },
+        {
+          "key": "shield",
+          "label": "Shield adaptation",
+          "params": {
+            "C": 1000.0
+          },
+          "n": 5,
+          "tips": 0,
+          "rmse1": 53.614936725535344,
+          "rmse2": 49.49689827070015,
+          "rmse1Sd": 1.113795173302023,
+          "rmse2Sd": 1.7336406820831383,
+          "modelRatio": 0.6560180218689927,
+          "copRatio": 0.6121439419273395,
+          "executionError": 0.054778355592071684,
+          "meanRunStepMs": 283.34945041762103
+        },
+        {
+          "key": "dualguard",
+          "label": "DualGuard adaptation",
+          "params": {},
+          "n": 5,
+          "tips": 0,
+          "rmse1": 110.1540011899121,
+          "rmse2": 237.7157149911244,
+          "rmse1Sd": 1.6639170559406191,
+          "rmse2Sd": 12.864412515843451,
+          "modelRatio": 0.5223993990130639,
+          "copRatio": 0.4764972396763767,
+          "executionError": 0.25666310935480674,
+          "meanRunStepMs": 385.24570614077845
+        },
+        {
+          "key": "gs",
+          "label": "GS raw-mean adaptation",
+          "params": {
+            "rho": 20.0
+          },
+          "n": 5,
+          "tips": 0,
+          "rmse1": 39.268405671215014,
+          "rmse2": 41.40278629667355,
+          "rmse1Sd": 0.6323177969748013,
+          "rmse2Sd": 1.2618940012729154,
+          "modelRatio": 0.6593817304805355,
+          "copRatio": 0.6272085748216213,
+          "executionError": 0.05946634037349753,
+          "meanRunStepMs": 479.5021995366009
+        },
+        {
+          "key": "offline",
+          "label": "Offline robust plan",
+          "params": {},
+          "n": 1,
+          "tips": 0,
+          "rmse1": 27.70566963798133,
+          "rmse2": 26.66304409085694,
+          "rmse1Sd": 0.0,
+          "rmse2Sd": 0.0,
+          "modelRatio": 0.8531612538988987,
+          "copRatio": 0.8284720057284333,
+          "executionError": 0.10943644852642331,
+          "meanRunStepMs": 0.034433022834533866
+        },
+        {
+          "key": "online",
+          "label": "Online robust NMPC",
+          "params": {
+            "w_j": 0.1
+          },
+          "n": 1,
+          "tips": 0,
+          "rmse1": 45.05621196529318,
+          "rmse2": 46.10512371143307,
+          "rmse1Sd": 0.0,
+          "rmse2Sd": 0.0,
+          "modelRatio": 0.6524441582398134,
+          "copRatio": 0.6370545158424238,
+          "executionError": 0.052160627942059765,
+          "meanRunStepMs": 465.148306976419
+        }
+      ]
+    },
+    "writing": [
+      {
+        "key": "dualguard",
+        "label": "DualGuard adaptation",
+        "variant": "dualguard",
+        "params": {},
+        "n": 3,
+        "tracking": 1.5501900663738877,
+        "trackingSd": 0.005069451211931274,
+        "force": 3.0352981706970157,
+        "inBand": 100.0,
+        "orientation": 0.10650622501338133,
+        "completed": 3
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "variant": "gs@rho=100",
+        "params": {
+          "rho": 100.0
+        },
+        "n": 3,
+        "tracking": 1.321916428298313,
+        "trackingSd": 0.004500327860810207,
+        "force": 2.087618450064535,
+        "inBand": 46.973333333333336,
+        "orientation": 0.0828606366612999,
+        "completed": 3
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "variant": "gs@rho=20",
+        "params": {
+          "rho": 20.0
+        },
+        "n": 3,
+        "tracking": 1.3219164235491345,
+        "trackingSd": 0.004500289928347648,
+        "force": 2.0876186473781075,
+        "inBand": 46.973333333333336,
+        "orientation": 0.08286062346145455,
+        "completed": 3
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "variant": "gs@rho=5",
+        "params": {
+          "rho": 5.0
+        },
+        "n": 3,
+        "tracking": 1.3249162802248915,
+        "trackingSd": 0.004585387819414373,
+        "force": 2.104950374214944,
+        "inBand": 50.69777777777777,
+        "orientation": 0.08264103429822493,
+        "completed": 3
+      },
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "variant": "shield@C=10",
+        "params": {
+          "C": 10.0
+        },
+        "n": 3,
+        "tracking": 4.555994479028508,
+        "trackingSd": 0.11438892489503055,
+        "force": 2.990026290009629,
+        "inBand": 87.36888888888889,
+        "orientation": 0.10876265054880217,
+        "completed": 3
+      },
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "variant": "shield@C=100",
+        "params": {
+          "C": 100.0
+        },
+        "n": 3,
+        "tracking": 15.083376243367349,
+        "trackingSd": 0.6114445082892428,
+        "force": 3.000053661564993,
+        "inBand": 86.71111111111112,
+        "orientation": 0.11717025278321475,
+        "completed": 3
+      },
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "variant": "shield@C=1000",
+        "params": {
+          "C": 1000.0
+        },
+        "n": 3,
+        "tracking": 50.002166715492486,
+        "trackingSd": 0.5953638920094474,
+        "force": 3.2745072427824518,
+        "inBand": 88.26906229883026,
+        "orientation": 0.13677422258252922,
+        "completed": 0
+      }
+    ],
+    "sweep": [
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "params": {
+          "C": 1000.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 40.72175188303489,
+        "rmse2": 40.57758241705908,
+        "rmse1Sd": 0.6547612395668765,
+        "rmse2Sd": 1.434826540983687,
+        "modelRatio": 0.4442275322982467,
+        "copRatio": 0.4127985538232448,
+        "executionError": 0.059685257366170606,
+        "meanRunStepMs": 267.9986868217919,
+        "height": 0.08,
+        "condition": "untightened"
+      },
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "params": {
+          "C": 1000.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 40.72255863250383,
+        "rmse2": 40.57821676020518,
+        "rmse1Sd": 0.65500081430677,
+        "rmse2Sd": 1.4347302990901212,
+        "modelRatio": 0.6108218818373105,
+        "copRatio": 0.565515315514067,
+        "executionError": 0.060176807318678804,
+        "meanRunStepMs": 374.9456226360053,
+        "height": 0.11,
+        "condition": "untightened"
+      },
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "params": {
+          "C": 1000.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 40.72383834749103,
+        "rmse2": 40.579189966010176,
+        "rmse1Sd": 0.6549111723183519,
+        "rmse2Sd": 1.434705867920245,
+        "modelRatio": 0.9440104350769807,
+        "copRatio": 0.8929543606769917,
+        "executionError": 0.06332360570432802,
+        "meanRunStepMs": 336.3294596931818,
+        "height": 0.17,
+        "condition": "untightened"
+      },
+      {
+        "key": "dualguard",
+        "label": "DualGuard adaptation",
+        "params": {},
+        "n": 3,
+        "tips": 0,
+        "rmse1": 84.01728400500707,
+        "rmse2": 113.54553895310343,
+        "rmse1Sd": 2.3776869547821375,
+        "rmse2Sd": 11.579344322010028,
+        "modelRatio": 0.32271379625575264,
+        "copRatio": 0.3065794112055904,
+        "executionError": 0.1010843905987102,
+        "meanRunStepMs": 401.60036511961084,
+        "height": 0.08,
+        "condition": "untightened"
+      },
+      {
+        "key": "dualguard",
+        "label": "DualGuard adaptation",
+        "params": {},
+        "n": 3,
+        "tips": 0,
+        "rmse1": 83.76573839034886,
+        "rmse2": 114.06322617022933,
+        "rmse1Sd": 2.2554108287051253,
+        "rmse2Sd": 12.892729184601468,
+        "modelRatio": 0.47230137065501665,
+        "copRatio": 0.4336674732269392,
+        "executionError": 0.08764739370375713,
+        "meanRunStepMs": 365.6049592272458,
+        "height": 0.11,
+        "condition": "untightened"
+      },
+      {
+        "key": "dualguard",
+        "label": "DualGuard adaptation",
+        "params": {},
+        "n": 3,
+        "tips": 0,
+        "rmse1": 83.72004195986895,
+        "rmse2": 111.77271629172249,
+        "rmse1Sd": 1.5984223360789858,
+        "rmse2Sd": 12.4912383296954,
+        "modelRatio": 0.7299098880859741,
+        "copRatio": 0.7375540340470652,
+        "executionError": 0.21932982386464375,
+        "meanRunStepMs": 347.5181452691728,
+        "height": 0.17,
+        "condition": "untightened"
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "params": {
+          "rho": 100.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 30.112244397347144,
+        "rmse2": 32.39657487180785,
+        "rmse1Sd": 0.11852860628630117,
+        "rmse2Sd": 0.2862615949212811,
+        "modelRatio": 0.44444444472518785,
+        "copRatio": 0.4282361151056681,
+        "executionError": 0.07883121752531974,
+        "meanRunStepMs": 612.0086820164421,
+        "height": 0.08,
+        "condition": "untightened"
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "params": {
+          "rho": 100.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 30.113363855433164,
+        "rmse2": 32.39777009938797,
+        "rmse1Sd": 0.11870466867206178,
+        "rmse2Sd": 0.28552559870733946,
+        "modelRatio": 0.6111111115011726,
+        "copRatio": 0.588366606865304,
+        "executionError": 0.07722516851132201,
+        "meanRunStepMs": 438.8341958127382,
+        "height": 0.11,
+        "condition": "untightened"
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "params": {
+          "rho": 100.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 30.115755342242934,
+        "rmse2": 32.39982096514824,
+        "rmse1Sd": 0.1185553998530564,
+        "rmse2Sd": 0.2851304999130807,
+        "modelRatio": 0.9444444450646188,
+        "copRatio": 1.0000046077770757,
+        "executionError": 0.07738688542850626,
+        "meanRunStepMs": 423.10465379878013,
+        "height": 0.17,
+        "condition": "untightened"
+      },
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "params": {
+          "C": 1000.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 53.29554877080356,
+        "rmse2": 50.10593572370421,
+        "rmse1Sd": 1.1045725707601068,
+        "rmse2Sd": 2.1431058114357544,
+        "modelRatio": 0.37357891140443716,
+        "copRatio": 0.3482067800394949,
+        "executionError": 0.05456919377511302,
+        "meanRunStepMs": 263.39673627918773,
+        "height": 0.08,
+        "condition": "tightened"
+      },
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "params": {
+          "C": 1000.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 53.29623875808219,
+        "rmse2": 50.10647336989616,
+        "rmse1Sd": 1.104687395993668,
+        "rmse2Sd": 2.1430920486515643,
+        "modelRatio": 0.5136896530307549,
+        "copRatio": 0.47821979349832333,
+        "executionError": 0.054735593904992386,
+        "meanRunStepMs": 317.85455317481944,
+        "height": 0.11,
+        "condition": "tightened"
+      },
+      {
+        "key": "shield",
+        "label": "Shield adaptation",
+        "params": {
+          "C": 1000.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 53.297734714185935,
+        "rmse2": 50.10731395828841,
+        "rmse1Sd": 1.104038785635344,
+        "rmse2Sd": 2.143168460605662,
+        "modelRatio": 0.7939611377162434,
+        "copRatio": 0.7507620637703051,
+        "executionError": 0.057124035313217546,
+        "meanRunStepMs": 410.9294865148633,
+        "height": 0.17,
+        "condition": "tightened"
+      },
+      {
+        "key": "dualguard",
+        "label": "DualGuard adaptation",
+        "params": {},
+        "n": 3,
+        "tips": 0,
+        "rmse1": 109.1730474024769,
+        "rmse2": 235.8550258913581,
+        "rmse1Sd": 0.9948701564028115,
+        "rmse2Sd": 8.341952110793882,
+        "modelRatio": 0.2975609760726272,
+        "copRatio": 0.27591543405808133,
+        "executionError": 0.2091899062396599,
+        "meanRunStepMs": 469.905351161372,
+        "height": 0.08,
+        "condition": "tightened"
+      },
+      {
+        "key": "dualguard",
+        "label": "DualGuard adaptation",
+        "params": {},
+        "n": 3,
+        "tips": 0,
+        "rmse1": 108.84698203658763,
+        "rmse2": 233.05608078129782,
+        "rmse1Sd": 0.2657145525927794,
+        "rmse2Sd": 16.404395676537177,
+        "modelRatio": 0.3722638875461043,
+        "copRatio": 0.3513257071565229,
+        "executionError": 0.19140450067169018,
+        "meanRunStepMs": 340.85842247911575,
+        "height": 0.11,
+        "condition": "tightened"
+      },
+      {
+        "key": "dualguard",
+        "label": "DualGuard adaptation",
+        "params": {},
+        "n": 3,
+        "tips": 0,
+        "rmse1": 108.57773267149145,
+        "rmse2": 234.2986612116952,
+        "rmse1Sd": 0.47105126241553147,
+        "rmse2Sd": 15.421922962319345,
+        "modelRatio": 0.5637620886481499,
+        "copRatio": 0.5606419760648623,
+        "executionError": 0.20248415662216895,
+        "meanRunStepMs": 342.4275241866202,
+        "height": 0.17,
+        "condition": "tightened"
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "params": {
+          "rho": 20.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 39.653739254095626,
+        "rmse2": 42.16662531164027,
+        "rmse1Sd": 0.3234995159833783,
+        "rmse2Sd": 0.9311606552243542,
+        "modelRatio": 0.3767890823025397,
+        "copRatio": 0.3543093028683452,
+        "executionError": 0.054728566676426664,
+        "meanRunStepMs": 753.4380396887617,
+        "height": 0.08,
+        "condition": "tightened"
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "params": {
+          "rho": 20.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 39.65522923298666,
+        "rmse2": 42.167152407200355,
+        "rmse1Sd": 0.3230427316492732,
+        "rmse2Sd": 0.9314351020876951,
+        "modelRatio": 0.5180852989870237,
+        "copRatio": 0.48821996209448826,
+        "executionError": 0.05396140892915046,
+        "meanRunStepMs": 540.7056782946944,
+        "height": 0.11,
+        "condition": "tightened"
+      },
+      {
+        "key": "gs",
+        "label": "GS raw-mean adaptation",
+        "params": {
+          "rho": 20.0
+        },
+        "n": 3,
+        "tips": 0,
+        "rmse1": 39.65755499117376,
+        "rmse2": 42.1687880477936,
+        "rmse1Sd": 0.32266377191750517,
+        "rmse2Sd": 0.9315916256092532,
+        "modelRatio": 0.8006784212029885,
+        "copRatio": 0.7881754524082943,
+        "executionError": 0.055627616503356396,
+        "meanRunStepMs": 415.0059475967762,
+        "height": 0.17,
+        "condition": "tightened"
+      }
+    ],
+    "optimization": [
+      {
+        "tipped": true,
+        "t_tip": 1.28,
+        "rmse1": null,
+        "rmse2": null,
+        "reach1": 0.8400000000000001,
+        "reach2": null,
+        "peak_ah": 1.391288726061657,
+        "oct_model_max": 1.2379707473143666,
+        "cop_true_max": 1.0011578398882937,
+        "dev_max": 0.10838349986504224,
+        "ms_per_step": 0.040074469808964654,
+        "h_true": 0.17,
+        "seed": 0,
+        "kind": "offline",
+        "params": {},
+        "eps": 0.0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 23.138426194941026,
+        "rmse2": 22.20886902337413,
+        "reach1": 0.8400000000000001,
+        "reach2": 0.8200000000000003,
+        "peak_ah": 1.3919165075190176,
+        "oct_model_max": 1.0203706204763787,
+        "cop_true_max": 0.9620134796464967,
+        "dev_max": 0.10846697990056932,
+        "ms_per_step": 0.043484193900989926,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "offline",
+        "params": {},
+        "eps": 0.0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 23.13563294599058,
+        "rmse2": 22.20765675718054,
+        "reach1": 0.8400000000000001,
+        "reach2": 0.8200000000000003,
+        "peak_ah": 1.379206205460007,
+        "oct_model_max": 0.7995381144609411,
+        "cop_true_max": 0.7875078782748032,
+        "dev_max": 0.117370428756381,
+        "ms_per_step": 0.050817676928154254,
+        "h_true": 0.11,
+        "seed": 0,
+        "kind": "offline",
+        "params": {},
+        "eps": 0.0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 23.136279855690304,
+        "rmse2": 22.209758554370804,
+        "reach1": 0.8400000000000001,
+        "reach2": 0.8200000000000003,
+        "peak_ah": 1.4017147126411045,
+        "oct_model_max": 0.5846458030799768,
+        "cop_true_max": 0.5299641605348558,
+        "dev_max": 0.14522742343691933,
+        "ms_per_step": 0.03360232641530591,
+        "h_true": 0.08,
+        "seed": 0,
+        "kind": "offline",
+        "params": {},
+        "eps": 0.0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 27.707130709258884,
+        "rmse2": 26.661235844797417,
+        "reach1": 0.8600000000000001,
+        "reach2": 0.8600000000000003,
+        "peak_ah": 1.2518657658834709,
+        "oct_model_max": 0.669725244384835,
+        "cop_true_max": 0.6584484674079022,
+        "dev_max": 0.10613695538946726,
+        "ms_per_step": 0.034497674489610414,
+        "h_true": 0.11,
+        "seed": 0,
+        "kind": "offline",
+        "params": {},
+        "eps": 0.165037939279656
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 27.707214373070077,
+        "rmse2": 26.66476748469867,
+        "reach1": 0.8600000000000001,
+        "reach2": 0.8600000000000003,
+        "peak_ah": 1.2650823394698592,
+        "oct_model_max": 0.4890434336181033,
+        "cop_true_max": 0.4725889047192269,
+        "dev_max": 0.12961656425743776,
+        "ms_per_step": 0.04192604683339596,
+        "h_true": 0.08,
+        "seed": 0,
+        "kind": "offline",
+        "params": {},
+        "eps": 0.165037939279656
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 27.70566963798133,
+        "rmse2": 26.66304409085694,
+        "reach1": 0.8600000000000001,
+        "reach2": 0.8600000000000003,
+        "peak_ah": 1.2503198809409237,
+        "oct_model_max": 0.8531612538988987,
+        "cop_true_max": 0.8284720057284333,
+        "dev_max": 0.10943644852642331,
+        "ms_per_step": 0.034433022834533866,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "offline",
+        "params": {},
+        "eps": 0.165037939279656
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 27.70495038392759,
+        "rmse2": 26.66405813403376,
+        "reach1": 0.8600000000000001,
+        "reach2": 0.8600000000000003,
+        "peak_ah": 1.2531957746449496,
+        "oct_model_max": 1.0382821554480999,
+        "cop_true_max": 0.9778887153481575,
+        "dev_max": 0.18360550153768898,
+        "ms_per_step": 0.2578446506197716,
+        "h_true": 0.17,
+        "seed": 0,
+        "kind": "offline",
+        "params": {},
+        "eps": 0.165037939279656
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 36.284035415329704,
+        "rmse2": 38.10815721297675,
+        "reach1": 0.8999999999999999,
+        "reach2": 0.9000000000000004,
+        "peak_ah": 1.1555041584287287,
+        "oct_model_max": 0.7777778104210213,
+        "cop_true_max": 0.7682940975379136,
+        "dev_max": 0.15671111878722818,
+        "ms_per_step": 457.5573967428618,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.001
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 34.87240048286425,
+        "rmse2": 37.17284218260396,
+        "reach1": 0.8999999999999999,
+        "reach2": 0.9000000000000004,
+        "peak_ah": 1.1105863206539388,
+        "oct_model_max": 0.7777778121073676,
+        "cop_true_max": 0.7566532009872717,
+        "dev_max": 0.07587566790594734,
+        "ms_per_step": 565.86384558238,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.01
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 37.42525393128574,
+        "rmse2": 39.7505077226683,
+        "reach1": 0.8999999999999999,
+        "reach2": 0.9000000000000004,
+        "peak_ah": 1.2239168598288999,
+        "oct_model_max": 0.777777809318836,
+        "cop_true_max": 0.8530258327980894,
+        "dev_max": 0.14506533737915456,
+        "ms_per_step": 662.288800929673,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.0001
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 49.019282763177856,
+        "rmse2": 51.463778596154505,
+        "reach1": 0.98,
+        "reach2": 0.9600000000000004,
+        "peak_ah": 1.1338592064674506,
+        "oct_model_max": 0.6650783248212293,
+        "cop_true_max": 0.8617677886514303,
+        "dev_max": 0.17995096410141376,
+        "ms_per_step": 627.0551381410684,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.0001
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 47.516894862640896,
+        "rmse2": 48.961739964473196,
+        "reach1": 0.96,
+        "reach2": 0.9400000000000004,
+        "peak_ah": 1.117767406125745,
+        "oct_model_max": 0.6615928134634075,
+        "cop_true_max": 0.7172029280943695,
+        "dev_max": 0.40883958939848286,
+        "ms_per_step": 594.1886586055896,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.001
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 45.87139858050268,
+        "rmse2": 47.92851123310695,
+        "reach1": 0.96,
+        "reach2": 0.9400000000000004,
+        "peak_ah": 0.936653287712196,
+        "oct_model_max": 0.6544190436387655,
+        "cop_true_max": 0.6536302011912147,
+        "dev_max": 0.06283791578565079,
+        "ms_per_step": 484.1133637126362,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.01
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 34.87186126843784,
+        "rmse2": 37.16463382105352,
+        "reach1": 0.8999999999999999,
+        "reach2": 0.9000000000000004,
+        "peak_ah": 1.1089072629096683,
+        "oct_model_max": 0.6111111380630844,
+        "cop_true_max": 0.6124809141283521,
+        "dev_max": 0.07779078373898869,
+        "ms_per_step": 466.62990232269,
+        "h_true": 0.11,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.01
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 34.871511928319286,
+        "rmse2": 37.17308317220722,
+        "reach1": 0.8999999999999999,
+        "reach2": 0.9000000000000004,
+        "peak_ah": 1.1094893734832105,
+        "oct_model_max": 0.4444444640281828,
+        "cop_true_max": 0.4535501260205498,
+        "dev_max": 0.11364727688994763,
+        "ms_per_step": 480.6814744272594,
+        "h_true": 0.08,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.01
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 34.87319532182578,
+        "rmse2": 37.16373871457597,
+        "reach1": 0.8999999999999999,
+        "reach2": 0.9000000000000004,
+        "peak_ah": 1.1056693282434027,
+        "oct_model_max": 0.9444444859951547,
+        "cop_true_max": 0.9153741045102314,
+        "dev_max": 0.06972947726610476,
+        "ms_per_step": 539.1327483698639,
+        "h_true": 0.17,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.01
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 45.867458221155445,
+        "rmse2": 47.94295413717939,
+        "reach1": 0.96,
+        "reach2": 0.9400000000000004,
+        "peak_ah": 0.9304041707029215,
+        "oct_model_max": 0.3739535065523339,
+        "cop_true_max": 0.37314703352269124,
+        "dev_max": 0.06623888389880937,
+        "ms_per_step": 771.8405641831978,
+        "h_true": 0.08,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.01
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 45.87317450656858,
+        "rmse2": 47.92724045722107,
+        "reach1": 0.96,
+        "reach2": 0.9400000000000004,
+        "peak_ah": 0.93048948279642,
+        "oct_model_max": 0.5141854883794819,
+        "cop_true_max": 0.5213989795936532,
+        "dev_max": 0.17887800085117397,
+        "ms_per_step": 398.1009162794582,
+        "h_true": 0.11,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.01
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 45.87449789900569,
+        "rmse2": 47.93977881101014,
+        "reach1": 0.96,
+        "reach2": 0.9400000000000004,
+        "peak_ah": 0.9316046005019415,
+        "oct_model_max": 0.7946540546256071,
+        "cop_true_max": 0.7695522491745226,
+        "dev_max": 0.059146490850478114,
+        "ms_per_step": 590.8219837182917,
+        "h_true": 0.17,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.01
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 34.45161099061443,
+        "rmse2": 37.058741887418996,
+        "reach1": 0.9199999999999999,
+        "reach2": 0.9200000000000004,
+        "peak_ah": 1.082057248467789,
+        "oct_model_max": 0.7777778127755464,
+        "cop_true_max": 0.7438645736811459,
+        "dev_max": 0.060389929435574426,
+        "ms_per_step": 435.94520744369476,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.1
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 40.891005174246295,
+        "rmse2": 42.08142209859733,
+        "reach1": 1.52,
+        "reach2": 1.5200000000000005,
+        "peak_ah": 1.076514035149599,
+        "oct_model_max": 0.7777778109653434,
+        "cop_true_max": 0.7316470473621679,
+        "dev_max": 0.046565837435203365,
+        "ms_per_step": 441.5393981416602,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 1.0
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 45.05621196529318,
+        "rmse2": 46.10512371143307,
+        "reach1": 0.96,
+        "reach2": 0.9600000000000004,
+        "peak_ah": 0.9070744336213066,
+        "oct_model_max": 0.6524441582398134,
+        "cop_true_max": 0.6370545158424238,
+        "dev_max": 0.052160627942059765,
+        "ms_per_step": 465.148306976419,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.1
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 50.06354738886161,
+        "rmse2": 48.08642559143689,
+        "reach1": 1.66,
+        "reach2": 1.6400000000000001,
+        "peak_ah": 0.912964443944459,
+        "oct_model_max": 0.6506239743690112,
+        "cop_true_max": 0.6071842408850037,
+        "dev_max": 0.03705330090683302,
+        "ms_per_step": 524.7070520953818,
+        "h_true": 0.14,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 1.0
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 34.44584731843516,
+        "rmse2": 37.06439205381224,
+        "reach1": 0.9199999999999999,
+        "reach2": 0.9200000000000004,
+        "peak_ah": 1.0836141508396002,
+        "oct_model_max": 0.6111111388191082,
+        "cop_true_max": 0.6072338517547726,
+        "dev_max": 0.06270610995974528,
+        "ms_per_step": 413.3161018618794,
+        "h_true": 0.11,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.1
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 34.448035430407835,
+        "rmse2": 37.06140782372648,
+        "reach1": 0.9199999999999999,
+        "reach2": 0.9200000000000004,
+        "peak_ah": 1.0820852989215106,
+        "oct_model_max": 0.444444464429104,
+        "cop_true_max": 0.441257705525419,
+        "dev_max": 0.0672155017948856,
+        "ms_per_step": 573.581386047827,
+        "h_true": 0.08,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.1
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 34.45109852338221,
+        "rmse2": 37.05839621902281,
+        "reach1": 0.9199999999999999,
+        "reach2": 0.9200000000000004,
+        "peak_ah": 1.0839829460047907,
+        "oct_model_max": 0.9444444873373313,
+        "cop_true_max": 0.9059883077617099,
+        "dev_max": 0.059371248836570176,
+        "ms_per_step": 680.1193297634898,
+        "h_true": 0.17,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.1
+        },
+        "eps": 0.0,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 45.05273474674493,
+        "rmse2": 46.1004441195317,
+        "reach1": 0.96,
+        "reach2": 0.9600000000000004,
+        "peak_ah": 0.9053395257398774,
+        "oct_model_max": 0.5126324241574163,
+        "cop_true_max": 0.5035304326486394,
+        "dev_max": 0.052061005111759026,
+        "ms_per_step": 394.9005716301631,
+        "h_true": 0.11,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.1
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 45.05424044858538,
+        "rmse2": 46.10713777091461,
+        "reach1": 0.96,
+        "reach2": 0.9600000000000004,
+        "peak_ah": 0.905583412548537,
+        "oct_model_max": 0.792250787784529,
+        "cop_true_max": 0.7598222145431993,
+        "dev_max": 0.04881937714790753,
+        "ms_per_step": 486.375067908815,
+        "h_true": 0.17,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.1
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      },
+      {
+        "tipped": false,
+        "t_tip": null,
+        "rmse1": 45.05292375011528,
+        "rmse2": 46.10483898062054,
+        "reach1": 0.96,
+        "reach2": 0.9600000000000004,
+        "peak_ah": 0.9055384764289827,
+        "oct_model_max": 0.37282424719077806,
+        "cop_true_max": 0.36228979880342543,
+        "dev_max": 0.0805935169788399,
+        "ms_per_step": 555.9088097614517,
+        "h_true": 0.08,
+        "seed": 0,
+        "kind": "online",
+        "params": {
+          "w_j": 0.1
+        },
+        "eps": 0.165037939279656,
+        "fail": 0
+      }
+    ]
+  },
+  "timing": {
+    "device": "NVIDIA GeForce RTX 4060 (8 GB)",
+    "method": [
+      "H = 15, dt = 10 ms).  Per configuration: 10 warm-up plans, then 3 rounds of 50 plans; the reported",
+      "value is the smallest round median (robust to background load on a shared machine).  Kernel time is",
+      "measured in a separate pass with device synchronisation around the launch.  numpy: median of 3 plans."
+    ],
+    "waiter_numpy_K256_ms": 293.24500006623566,
+    "waiter_gpu": {
+      "256": {
+        "plan_ms": 8.677500009071082,
+        "kernel_ms": 6.974550022277981
+      },
+      "1024": {
+        "plan_ms": 8.647500013466924,
+        "kernel_ms": 7.0312999887391925
+      },
+      "4096": {
+        "plan_ms": 17.29824999347329,
+        "kernel_ms": 15.566200017929077
+      }
+    },
+    "writing_numpy_K256_ms": {
+      "separable": 183.91160003375262,
+      "joint": 199.80750000104308
+    },
+    "writing_gpu": {
+      "separable": {
+        "256": {
+          "plan_ms": 3.853350004646927,
+          "kernel_ms": 0.7184999994933605
+        },
+        "1024": {
+          "plan_ms": 4.426150000654161,
+          "kernel_ms": 1.2414000229910016
+        },
+        "4096": {
+          "plan_ms": 6.921100022736937,
+          "kernel_ms": 1.94540002848953
+        }
+      },
+      "joint": {
+        "256": {
+          "plan_ms": 6.4580500475130975,
+          "kernel_ms": 2.4321500095538795
+        },
+        "1024": {
+          "plan_ms": 7.641200034413487,
+          "kernel_ms": 2.817199914716184
+        },
+        "4096": {
+          "plan_ms": 10.892199992667884,
+          "kernel_ms": 4.030799958854914
+        }
+      }
+    }
+  },
   "studyNotes": {
-    "writing": "Raw-update Unified, zero board offset, 3 seeds. No execution-error tightening; measured force in band is reported separately from commanded reaction feasibility.",
-    "dual": "Seed-0 comparison at 2 mm base error, matching the replay. UP-MPPI uses the new raw update. This is one run per method.",
-    "waiter": "Raw update with calibrated execution-error tightening. Five seeds at h=0.14 m, three at each other height.",
-    "averaging": "Same robust prior and epsilon for both averaging rules. Five seeds at h=0.14 m."
+    "writing": "Mixed update, zero board offset, 3 seeds. No execution-error tightening; force statistics describe simulator measurements.",
+    "dual": "Mixed-update UP-MPPI with calibrated joint-margin tightening and a reaction box. Each plotted point is the mean of 3 seeds.",
+    "waiter": "Motion-only raw update with calibrated tightening; 5 seeds at h=0.14 m, 3 at each other height.",
+    "averaging": "Same robust prior and epsilon; 5 seeds per averaging rule at h=0.14 m.",
+    "comparators": "Task adaptations, not exact reproductions of published implementations. Shield and DualGuard use local filters/backups. The GS adaptation executes a raw mean; the original selects its best sample and uses a faster inner filter. Offline planning has full reference preview. Online NMPC includes an additional jerk penalty. Five seeds per waiter MPPI condition, one deterministic optimization run; three seeds per writing condition.",
+    "timing": "RTX 4060. Minimum of 3 round medians, 50 plans per round after 10 warmups. Separate synchronized kernel pass. Includes host processing and transfers in plan time; shared-machine measurements, not worst-case deadlines."
   },
   "sources": {
-    "experiments/results/waiter.json": "d492c0f7434c528466fcd755491237a493f13dc9d7ff34b01ddfbdb01bd69ebf",
-    "experiments/results/waiter_baselines_ablation.json": "a908b194f75316fa2a200bf29896ea47c4cf15df6e4c53676b6dbc9e9b96e290",
-    "experiments/results/writing.json": "7d3ade05935ce265b4375757429168760b7a42a5c62a064ea6ec6ed2798d6c35",
-    "experiments/results/dualarm.json": "aaf518d29f75ab43cf4160318bb4ed3e4fc6e52505ab6027fc4a553c0daabf9c",
-    "experiments/results/waiter_exec_bound.json": "749b9998d715c37a3f3cb8fc4352d3a5a7b257fb74e66cbd53928b0e6a4d6c89"
+    "waiter_exec_bound.json": "749b9998d715c37a3f3cb8fc4352d3a5a7b257fb74e66cbd53928b0e6a4d6c89",
+    "writing.json": "90d6b9838a19a4bad8777a9fa1924983852f3d73a4a153d3e428d03033c1ad5d",
+    "dualarm.json": "c17ba44e3c9b6a7bb3c7bb436e42b1bf3347dad9f8f435e99f917d807369688c",
+    "waiter.json": "d492c0f7434c528466fcd755491237a493f13dc9d7ff34b01ddfbdb01bd69ebf",
+    "waiter_baselines_ablation.json": "a908b194f75316fa2a200bf29896ea47c4cf15df6e4c53676b6dbc9e9b96e290",
+    "safe_baselines_tune.json": "7d318d29ac71bc2ce227c809449c740047eefb243b5df4ac50d5ebc58bc41aff",
+    "safe_baselines_sweep.json": "97db9b4fb2b50fc7bc5078cd477519a90352d5827b97e1473a12eb80862c79c6",
+    "safe_writing.json": "cd4b3f137dfbea9c37e1569d30480d46c978042371e6bd01cf35413134b368d4",
+    "heins_baselines.json": "c3cd90f5842e7dff5b7ea9786d2e0bf73fe0ea096368501f5369761c517e0244",
+    "gpu_timing.json": "2c0b274b73d334fd1742eb1bebb15b7ee31628bba7a847f86b44c48e0692eb04"
   },
   "videoNotes": {
-    "hero": "Recorded simulation states re-rendered with a presentation camera at 1x; no generated robot motion.",
-    "writing": "Seed 0. PR at -1 mm and +0.5 mm, physical-orientation ablation, and new raw-update Unified at zero offset. 8 s at 1x.",
-    "dual": "Seed 0. Reference PR variants and new raw-update Unified at 2 mm base error. 6 s at 1x.",
-    "waiter": "New raw-update nominal, robust, F/T-only adaptive-cop and oracle at true h=0.14 m, seed 0. 4.3 s simulation at 0.5x.",
-    "averaging": "Seed 0. Projected robust and raw robust, identical explicit tightening. 4.3 s simulation at 0.5x."
+    "hero": "Recorded simulation states re-rendered at 1x; no generated robot motion.",
+    "writing": "Seed 0. PR at -1 mm and +0.5 mm; physical-orientation ablation; mixed-update UP at zero offset. 8 s at 1x.",
+    "dual": "Seed 0. PR, anchored PR and mixed-update UP at 2 mm; PR without inequality projection at zero error. 6 s at 1x.",
+    "waiter": "Seed 0, h=0.14 m. Nominal, robust, F/T-only COP adaptation, oracle. 4.3 s at 0.5x.",
+    "averaging": "Seed 0, same calibrated margin. Projected-average and raw-average robust waiter. 4.3 s at 0.5x."
   },
   "videoRuns": {
     "waiter_nominal": {
@@ -377,30 +1756,30 @@
     },
     "unified": {
       "controller": "Unified",
-      "track_rmse_mm": 1.3053447999207504,
-      "in_band": 0.4856,
+      "track_rmse_mm": 1.5750871633332433,
+      "in_band": 1.0,
       "delta_mm": 0
     },
     "dual_unified": {
       "controller": "Unified",
       "seed": 0,
-      "W_int_norm_mean": 1.0210853952923558,
+      "W_int_norm_mean": 1.9157379612626437,
       "delta_b_mm": 2
     }
   },
   "recordingProvenance": {
-    "resultsSha256": "4eb586bf87dcbc6496968e3354e394d4c9cc89ba75b0e3bc6664660fe53618cf",
-    "sourceSnapshotSha256": "61d5a6056601af29e5d5ec9e490c8b7154b59bf1594e1e3760c371e698aa6703",
-    "seed": 0,
-    "validation": "All five waiter recordings and the writing recording reproduce the corresponding saved seed-0 outcomes. Dual-arm is a new illustrative seed-0 run."
+    "resultsSha256": "0a1662ae181673faf3189d9186c407cfd173ddc9125ea90966613c420fe6fbc7",
+    "sourceSnapshotSha256": "75945a8450ee6a13fb7229a92a1266f6bb2fb9fd0560a7e8dc8cee4462b46ddc",
+    "paperManifestSha256": "74a7b3d7c95fca857178c44d85c5e8ba82d63b317d58eaaecbfda1e4810d58c2",
+    "validation": "Writing and dual-arm recordings reproduce the frozen seed-0 metrics (rtol=1e-6, atol=1e-7). Five waiter recordings retained from the validated, unchanged motion-only study."
   },
   "mediaHashes": {
-    "assets/videos/averaging.mp4": "bef45ed499bef6a3dbfdc91699a8f23a2ee6101412391cd9ae2d84fbcd9818d6",
-    "assets/videos/dualarm.mp4": "8fd61929369c1e4cf42052bf2b1756ca557e41fedfa3ac0078b9c8c2d856baeb",
-    "assets/videos/hero-dualarm.mp4": "fa1aa5985f624baa5554fa357d2102d1730b89c57a7bd8dac8dd54182f30e96b",
-    "assets/videos/hero-waiter.mp4": "faa80b47fe8186a318de3d735321bf405c3b33a0f9e46efb8830e2d080663632",
-    "assets/videos/hero-writing.mp4": "a29e3cee3588197a6b97acef02e809962aee880f4a3c24a80f025b8ae71e4627",
-    "assets/videos/waiter.mp4": "51bc58f713ca72fbc9616703eb361677e58772a90ab8dd277074f018f592743e",
-    "assets/videos/writing.mp4": "2b76d43730e9220bc0c35bcc06bf890a087adf14dc15e98a55f3df70dc33dc97"
+    "assets/videos/averaging.mp4": "d0ef4ff44b3284f18a130febaf063480dfae4bd2717b7ea21e674df5d5d07a6e",
+    "assets/videos/dualarm.mp4": "9a8860b45c6463d5cf5b9354526a4a4fd83c94bf753d8dc42d08294803cfd5e7",
+    "assets/videos/hero-dualarm.mp4": "80b40f688e8ea07496df0837f9479b5b1e17eb2b09b0afa49fb3c3432598e9dd",
+    "assets/videos/hero-waiter.mp4": "8c633a4a4c7d1ed84ecb4ca4a74c51bd58eadd3b5012e8ad44aa30177ac97a07",
+    "assets/videos/hero-writing.mp4": "7c89a67b44e364803632c30ebb62d3c2de4788b3d4774026b3ee017377ef210a",
+    "assets/videos/waiter.mp4": "a49b2743467cbd8ab03aff2e21fbb81460391c9a818da56a2261eda941f97ec1",
+    "assets/videos/writing.mp4": "a6825ccfa82cceb3d956a09064a00728566ab3d977825b9418a501cd802cf740"
   }
 }

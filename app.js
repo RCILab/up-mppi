@@ -44,8 +44,8 @@
   let heroVisible = false;
   const sceneInfo = {
     waiter: ["01", "UNCERTAIN PAYLOAD · F/T-ONLY ADAPTATION", "Learn the load as the robot moves.", "Simulated tray transport with force-torque-only COP adaptation", "Raw average, final projection, and COP-difference adaptation using F/T measurements. Seed 0 at 1× speed; comparison film below."],
-    dualarm: ["02", "CLOSED-CHAIN MANIPULATION", "Two arms. One constrained motion.", "Simulated dual-arm transport using the unified controller", "UP-MPPI with the raw update at 2 mm base error. Seed 0, re-rendered at 1× speed; comparison film below."],
-    writing: ["03", "CURVED-SURFACE INTERACTION", "Follow the surface. Constrain the reaction.", "Simulated surface writing using the unified controller", "UP-MPPI with the raw update at zero board offset. Seed 0, re-rendered at 1× speed. Measured force statistics are reported below."]
+    dualarm: ["02", "CLOSED-CHAIN MANIPULATION", "Two arms. One constrained motion.", "Simulated dual-arm transport using the unified controller", "UP-MPPI with the mixed motion–reaction update at 2 mm base error. Seed 0, re-rendered at 1× speed; comparison film below."],
+    writing: ["03", "CURVED-SURFACE INTERACTION", "Follow the surface. Constrain the reaction.", "Simulated surface writing using the unified controller", "UP-MPPI with the mixed motion–reaction update at zero board offset. Seed 0, re-rendered at 1× speed. Measured force statistics are reported below."]
   };
   function updatePlayButton() {
     const playing = !heroVideo.paused;
@@ -80,8 +80,8 @@
       item.classList.toggle("active", selected);
     });
     heroVideo.pause();
-    heroVideo.poster = `assets/images/hero-${key}.jpg?v=alg1`;
-    heroVideo.src = `assets/videos/hero-${key}.mp4?v=alg1`;
+    heroVideo.poster = `assets/images/hero-${key}.jpg?v=revision-20260927`;
+    heroVideo.src = `assets/videos/hero-${key}.mp4?v=revision-20260927`;
     heroVideo.setAttribute("aria-label", label);
     $("#hero-count").textContent = `${index} / 03`;
     $("#hero-category").textContent = category;
@@ -129,7 +129,7 @@
     video.after(message);
   }));
 
-  // Schematic convex projection. The diagonal metric is W = diag(1, 1.6).
+  // Motion-channel schematic convex projection. The diagonal metric is W = diag(1, 1.6).
   // This is an explanatory two-dimensional example, not a robot experiment.
   const raw = [[-2.15,.98],[-1.94,-.63],[-1.35,1.2],[-1.5,-1.14],[-.9,.43],[-.88,-.55],[-.5,1.26],[-.34,-1.1],[-.15,.14],[.3,1.06],[.4,-.56],[.71,.31],[.91,1.27],[1.03,-1.18],[1.34,.16],[1.85,.92],[1.95,-.7],[2.17,.23],[.24,-.05],[-1.7,.12]];
   const motion = [[-1.6,-.85],[1.6,-.85],[1.6,.85],[-1.6,.85]];
@@ -201,7 +201,7 @@
   // Snapshot data are also shipped as a plain JSON download with source hashes.
   const results = globalThis.UP_MPPI_RESULTS;
   if (!results) {
-    $$("#offset, #height").forEach(select => { select.disabled = true; });
+    $$("#offset, #height, #baseline-task, #baseline-margin, #sample-count").forEach(select => { select.disabled = true; });
     return;
   }
   function bars(container, items, max, unit, digits) {
@@ -238,10 +238,72 @@
     $("#averaging-gain").textContent = `${Math.round(100*(1-items[1].value/items[0].value))}%`;
     $("#averaging-announcement").textContent = `${move === "rmse1" ? "First" : "Second"} move: ` + $("#averaging-chart").getAttribute("aria-label");
   }
+  // Insert cells as text so the downloadable data are never treated as HTML.
+  function tableRows(target, rows) {
+    target.replaceChildren(...rows.map(({cells, highlight}) => {
+      const row = document.createElement("tr");
+      if (highlight) row.className = "highlight";
+      cells.forEach((value, index) => {
+        const cell = document.createElement(index ? "td" : "th");
+        if (!index) cell.scope = "row";
+        cell.textContent = String(value);
+        row.append(cell);
+      });
+      return row;
+    }));
+  }
+  function tableHead(target, columns) {
+    const row = document.createElement("tr");
+    columns.forEach(label => {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = label;
+      row.append(cell);
+    });
+    target.replaceChildren(row);
+  }
+  function updateBaselines() {
+    const waiter = $("#baseline-task").value === "waiter";
+    $("#margin-control").hidden = !waiter;
+    if (waiter) {
+      const mode = $("#baseline-margin").value;
+      const data = results.comparators.waiter[mode];
+      tableHead($("#baseline-head"), ["Method", "Move 1 ↓", "Move 2 ↓", "Tipped runs ↓", "Max. error (m/s²)"]);
+      tableRows($("#baseline-table"), data.map(r => ({highlight:r.key === "up", cells:[r.label, `${r.rmse1.toFixed(1)} mm`, `${r.rmse2.toFixed(1)} mm`, `${r.tips}/${r.n}`, r.executionError.toFixed(3)]})));
+      $("#baseline-caption").textContent = `Waiter · true h = 0.14 m · ${mode === "tightened" ? "tightened rows" : "no execution tightening"}`;
+      $("#baseline-note").textContent = "MPPI: 5 seeds per condition; optimization: 1 deterministic run. Settings minimize main-task move-1 RMSE among no-tip variants. The offline planner knows the full reference. " + (mode === "tightened" ? "Equal numerical margins do not ensure equal certificates: DualGuard’s observed error exceeds ε." : "No tips occur at this height; the untightened offline plan tips in the 0.17 m condition. These outcomes do not establish an execution certificate.");
+    } else {
+      const up = results.writing.find(r => r.method === "Unified");
+      const rows = [{highlight:true,cells:["UP-MPPI · mixed update", `${up.tracking.toFixed(2)} mm`, `${up.inBand.toFixed(1)}%`, `${up.orientation.toFixed(2)}°`, `${up.n-up.diverged}/${up.n}`]}];
+      results.comparators.writing.forEach(r => {
+        const setting = Object.entries(r.params).map(([key,value]) => `${key === "rho" ? "ρ" : key} = ${value}`).join(", ");
+        rows.push({cells:[r.label+(setting ? ` · ${setting}` : ""), `${r.tracking.toFixed(2)} mm`, `${r.inBand.toFixed(1)}%`, `${r.orientation.toFixed(2)}°`, `${r.completed}/${r.n}`]});
+      });
+      tableHead($("#baseline-head"), ["Method", "Path RMSE ↓", "Force in band ↑", "Orientation ↓", "Completed runs"]);
+      tableRows($("#baseline-table"), rows);
+      $("#baseline-caption").textContent = "Writing · zero board offset · 3 seeds per setting";
+      $("#baseline-note").textContent = "All tested settings are shown. Divergent-run metrics cover only the executed portion. No force-error tightening is applied. The GS raw-mean variant changes the source algorithm’s execution rule; its force result is specific to this adaptation. DualGuard attains 100% occupancy with similar tracking here.";
+    }
+  }
+  function updateTiming() {
+    const k = $("#sample-count").value;
+    const t = results.timing;
+    const records = [["Writing · separable",t.writing_gpu.separable[k],10],["Writing · joint",t.writing_gpu.joint[k],10],["Waiter",t.waiter_gpu[k],20]];
+    tableRows($("#timing-table"), records.map(([label,r,period]) => ({highlight:label === "Writing · separable",cells:[label,`${r.plan_ms.toFixed(2)} ms`,`${r.kernel_ms.toFixed(2)} ms`,`${period} ms`]})));
+    $("#timing-caption").textContent = `RTX 4060 · K = ${k} · measured planning time`;
+    $("#timing-gain").textContent = `${Math.round(100*(1-t.writing_gpu.separable[k].plan_ms/t.writing_gpu.joint[k].plan_ms))}%`;
+    const over = records.filter(([,r,period]) => r.plan_ms > period);
+    $("#timing-note").textContent = (over.length ? over.map(([label,r,period]) => `${label} takes ${r.plan_ms.toFixed(2)} ms, exceeding its ${period} ms control period.`).join(" ") : `All three measurements at K = ${k} are below the corresponding simulated control period.`) + " This is not a worst-case deadline guarantee.";
+  }
   $("#offset").addEventListener("change",updateDual);
   $("#height").addEventListener("change",updateWaiter);
   $("#averaging-move").addEventListener("change",updateAveraging);
+  $("#baseline-task").addEventListener("change",updateBaselines);
+  $("#baseline-margin").addEventListener("change",updateBaselines);
+  $("#sample-count").addEventListener("change",updateTiming);
   updateDual();
   updateWaiter();
   updateAveraging();
+  updateBaselines();
+  updateTiming();
 })();

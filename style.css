@@ -467,3 +467,16 @@ footer .footer-inner > a:last-child { margin-left: auto; font-size: 10px; text-d
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+/* Additional evidence follows the existing result layout. */
+.comparison-details { margin-top: 24px; border-top: 1px solid #d7dccf; border-bottom: 1px solid #d7dccf; }
+.comparison-details summary { display: flex; justify-content: space-between; gap: 16px; cursor: pointer; padding: 18px 0; font-size: 14px; font-weight: 650; list-style: none; }
+.comparison-details summary::-webkit-details-marker { display: none; }
+.comparison-details[open] summary span { transform: rotate(45deg); }
+.comparison-notes { padding-bottom: 14px; font-size: 13px; line-height: 1.7; }
+.comparison-notes p + p { margin-top: 14px; }
+.comparison-notes a { white-space: nowrap; text-underline-offset: 3px; }
+#margin-control { margin-top: 18px; }
+#margin-control[hidden] { display: none; }
+#baseline-results .table-scroll table { min-width: 670px; }
+#baseline-results th:first-child { min-width: 205px; }
+#timing-results .table-scroll table { min-width: 540px; }
