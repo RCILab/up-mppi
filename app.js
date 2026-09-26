@@ -118,6 +118,9 @@
     });
   });
   // Surface video errors rather than leaving a silent empty player.
+  $$("video").forEach(video => video.addEventListener("play", () => {
+    $$("video").filter(other => other !== video).forEach(other => other.pause());
+  }));
   $$("video").forEach(video => video.addEventListener("error", () => {
     if (video.parentNode.querySelector(".video-error")) return;
     const message = document.createElement("p");
@@ -201,7 +204,7 @@
   // Snapshot data are also shipped as a plain JSON download with source hashes.
   const results = globalThis.UP_MPPI_RESULTS;
   if (!results) {
-    $$("#offset, #height, #baseline-task, #baseline-margin, #sample-count").forEach(select => { select.disabled = true; });
+    $$("#offset, #height, #averaging-move, #baseline-task, #baseline-margin, #sample-count").forEach(select => { select.disabled = true; });
     return;
   }
   function bars(container, items, max, unit, digits) {
@@ -240,9 +243,10 @@
   }
   // Insert cells as text so the downloadable data are never treated as HTML.
   function tableRows(target, rows) {
-    target.replaceChildren(...rows.map(({cells, highlight}) => {
+    target.replaceChildren(...rows.map(({cells, highlight, completed = true}) => {
       const row = document.createElement("tr");
       if (highlight) row.className = "highlight";
+      row.dataset.completed = String(completed);
       cells.forEach((value, index) => {
         const cell = document.createElement(index ? "td" : "th");
         if (!index) cell.scope = "row";
@@ -251,6 +255,20 @@
       });
       return row;
     }));
+  }
+  // Compare displayed precision, include ties, and exclude incomplete runs.
+  // Cell emphasis means best in this metric, not best controller overall.
+  function emphasizeTable(target, columns, eligible = row => row.dataset.completed !== "false") {
+    const rows = $$("tr", target).filter(eligible);
+    $$(".metric-best", target).forEach(cell => cell.classList.remove("metric-best"));
+    columns.forEach(([index, direction]) => {
+      const values = rows.map(row => parseFloat(row.cells[index].textContent));
+      if (!values.length || values.some(value => !Number.isFinite(value))) return;
+      const best = direction === "max" ? Math.max(...values) : Math.min(...values);
+      rows.forEach((row, i) => {
+        if (values[i] === best) row.cells[index].classList.add("metric-best");
+      });
+    });
   }
   function tableHead(target, columns) {
     const row = document.createElement("tr");
@@ -270,6 +288,10 @@
       const data = results.comparators.waiter[mode];
       tableHead($("#baseline-head"), ["Method", "Move 1 ↓", "Move 2 ↓", "Tipped runs ↓", "Max. error (m/s²)"]);
       tableRows($("#baseline-table"), data.map(r => ({highlight:r.key === "up", cells:[r.label, `${r.rmse1.toFixed(1)} mm`, `${r.rmse2.toFixed(1)} mm`, `${r.tips}/${r.n}`, r.executionError.toFixed(3)]})));
+      emphasizeTable($("#baseline-table"), [[1,"min"],[2,"min"]]);
+      if (mode === "tightened") data.forEach((r, i) => {
+        if (r.executionError > results.executionBound.epsilon) $("#baseline-table").rows[i].cells[4].classList.add("metric-violation");
+      });
       $("#baseline-caption").textContent = `Waiter · true h = 0.14 m · ${mode === "tightened" ? "tightened rows" : "no execution tightening"}`;
       $("#baseline-note").textContent = "MPPI: 5 seeds per condition; optimization: 1 deterministic run. Settings minimize main-task move-1 RMSE among no-tip variants. The offline planner knows the full reference. " + (mode === "tightened" ? "Equal numerical margins do not ensure equal certificates: DualGuard’s observed error exceeds ε." : "No tips occur at this height; the untightened offline plan tips in the 0.17 m condition. These outcomes do not establish an execution certificate.");
     } else {
@@ -277,10 +299,11 @@
       const rows = [{highlight:true,cells:["UP-MPPI · mixed update", `${up.tracking.toFixed(2)} mm`, `${up.inBand.toFixed(1)}%`, `${up.orientation.toFixed(2)}°`, `${up.n-up.diverged}/${up.n}`]}];
       results.comparators.writing.forEach(r => {
         const setting = Object.entries(r.params).map(([key,value]) => `${key === "rho" ? "ρ" : key} = ${value}`).join(", ");
-        rows.push({cells:[r.label+(setting ? ` · ${setting}` : ""), `${r.tracking.toFixed(2)} mm`, `${r.inBand.toFixed(1)}%`, `${r.orientation.toFixed(2)}°`, `${r.completed}/${r.n}`]});
+        rows.push({completed:r.completed === r.n, cells:[r.label+(setting ? ` · ${setting}` : ""), `${r.tracking.toFixed(2)} mm`, `${r.inBand.toFixed(1)}%`, `${r.orientation.toFixed(2)}°`, `${r.completed}/${r.n}`]});
       });
       tableHead($("#baseline-head"), ["Method", "Path RMSE ↓", "Force in band ↑", "Orientation ↓", "Completed runs"]);
       tableRows($("#baseline-table"), rows);
+      emphasizeTable($("#baseline-table"), [[1,"min"],[2,"max"],[3,"min"]]);
       $("#baseline-caption").textContent = "Writing · zero board offset · 3 seeds per setting";
       $("#baseline-note").textContent = "All tested settings are shown. Divergent-run metrics cover only the executed portion. No force-error tightening is applied. The GS raw-mean variant changes the source algorithm’s execution rule; its force result is specific to this adaptation. DualGuard attains 100% occupancy with similar tracking here.";
     }
@@ -290,6 +313,11 @@
     const t = results.timing;
     const records = [["Writing · separable",t.writing_gpu.separable[k],10],["Writing · joint",t.writing_gpu.joint[k],10],["Waiter",t.waiter_gpu[k],20]];
     tableRows($("#timing-table"), records.map(([label,r,period]) => ({highlight:label === "Writing · separable",cells:[label,`${r.plan_ms.toFixed(2)} ms`,`${r.kernel_ms.toFixed(2)} ms`,`${period} ms`]})));
+    // Only compare the equivalent writing solvers; waiter is a different task.
+    emphasizeTable($("#timing-table"), [[1,"min"],[2,"min"]], row => row.cells[0].textContent.startsWith("Writing"));
+    records.forEach(([, r, period], i) => {
+      if (r.plan_ms > period) $("#timing-table").rows[i].cells[1].classList.add("metric-violation");
+    });
     $("#timing-caption").textContent = `RTX 4060 · K = ${k} · measured planning time`;
     $("#timing-gain").textContent = `${Math.round(100*(1-t.writing_gpu.separable[k].plan_ms/t.writing_gpu.joint[k].plan_ms))}%`;
     const over = records.filter(([,r,period]) => r.plan_ms > period);
@@ -306,4 +334,16 @@
   updateAveraging();
   updateBaselines();
   updateTiming();
+  emphasizeTable($("#writing-table"), [[1,"max"],[2,"min"],[3,"min"]], row => {
+    const record = results.writing.find(r => r.label === row.cells[0].textContent);
+    return record && record.diverged === 0;
+  });
+  const upWriting = results.writing.find(r => r.method === "Unified");
+  const campWriting = results.writing.find(r => r.method === "CAMP");
+  const pathGain = 100 * (1 - upWriting.tracking / campWriting.tracking);
+  $("#writing-path-gain").textContent = `${pathGain.toFixed(1)}%`;
+  $("#writing-tilt-gain").textContent = `${(100 * (1 - upWriting.orientation / campWriting.orientation)).toFixed(1)}%`;
+  $("#summary-writing").innerHTML = `${Math.round(pathGain)}<span>%</span>`;
+  $("#summary-adaptation").innerHTML = `${Math.round(100 * (1 - results.waiterSweep["adaptive-cop|0.14"].rmse2 / results.waiterSweep["robust|0.14"].rmse2))}<span>%</span>`;
+  $("#summary-timing").innerHTML = `${Math.round(100 * (1 - results.timing.writing_gpu.separable["1024"].plan_ms / results.timing.writing_gpu.joint["1024"].plan_ms))}<span>%</span>`;
 })();

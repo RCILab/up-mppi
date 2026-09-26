@@ -28,6 +28,9 @@ Upload `index.html`, `style.css`, `app.js`, `.nojekyll`, and the entire `assets/
 
 - Paper availability is **TBD**. No manuscript PDF is included or copied by the asset preparation script; publication will be handled separately when ready.
 - `assets/data/results.json`: aggregates from saved simulation runs, source SHA-256 hashes, video-run metrics, and hashes of the published MP4 files. `results.js` contains the same snapshot for local-file compatibility.
+- `assets/images/*-snapshots.png`: three comparison figures exported from the private manuscript's recorded-state renderings. Writing includes ink close-ups; dual-arm transport includes instantaneous force and joint margin; the waiter includes a matched nominal/adaptive timeline. `assets/data/visuals.json` records the image, source-figure, and simulation-recording hashes. No manuscript PDF is published.
+- The result overview reports three separate, explicitly labeled comparisons: 11% lower writing path RMSE versus CAMP, 26% lower second-move RMSE with F/T-only adaptation versus the robust prior, and 42% less writing planning time with separation versus joint projection. All derive from the frozen snapshot.
+- Blue rows identify UP-MPPI; bold numbers mark the best displayed value, including ties and other methods, among completed runs. Red identifies an exceeded execution-error bound or control period. Timing emphasis compares the two writing solvers only. Writing shows the 11.0% path and 85.1% orientation improvements over CAMP; similar force regulation is stated explicitly.
 - The controller uses a **raw motion mean and an average of projected reactions**, with a final motion projection and measured-state command reconstruction. The waiter has no physical reaction channel and reduces to raw averaging plus final projection. Its support rows additionally use execution-error tightening.
 - `assets/videos/waiter.mp4`: freshly recorded nominal, robust, **F/T-only adaptive-cop**, and oracle runs, seed 0, true CoM height 0.14 m. The 4.3 s simulated task plays at 0.5× speed.
 - `assets/videos/averaging.mp4`: projected-average and raw-average robust controllers with identical explicit tightening, seed 0, 0.5× playback. The accompanying chart aggregates five seeds; the video is an individual example.
@@ -48,12 +51,13 @@ The private experiment workspace includes rendering helpers (excluded from this 
 ```powershell
 python -X utf8 website/tools/refresh_revision.py
 python -X utf8 website/tools/build_revision.py
+python -X utf8 website/tools/export_paper_visuals.py
 ```
 
-The first command records writing and dual-arm seed-0 illustrations, checks their outcomes against the frozen results, retains validated waiter recordings, and renders videos and posters. The second imports the manuscript's shared aggregation helper, exports all metrics and provenance, and updates HTML fallbacks. No manuscript is copied or published. Rendering needs the experiment dependencies (including Warp/PyTorch), MuJoCo, NumPy, Pillow and imageio-ffmpeg.
+The first command records writing and dual-arm seed-0 illustrations, checks their outcomes against the frozen results, retains validated waiter recordings, and renders videos and posters. The second imports the manuscript's shared aggregation helper, exports all metrics and provenance, updates HTML fallbacks, and applies the static table emphasis. The third exports only the three snapshot figures as PNGs, using PyMuPDF, and records their provenance. No manuscript is copied or published. Rendering needs the experiment dependencies (including Warp/PyTorch), MuJoCo, NumPy, Pillow and imageio-ffmpeg.
 
 Older export helpers are historical and must not be used to refresh current data. Dual-arm, waiter, averaging, comparison-task/margin and sample-count selectors read the published snapshot directly. Current default tables remain visible without JavaScript.
 
 ## Browser validation
 
-The private workspace's `tools/check_site.py` exercises the page in headless Chrome with Playwright: desktop/mobile layouts at 320–1440 px, all seven video sources, tabs and keyboard controls, every result selector, the schematic, reduced-motion behavior, static fallbacks, file URLs, and local links. The current revision passes 76 checks. The helper and its `checks/` output are excluded from this public repository.
+The private workspace's `tools/check_site.py` exercises the page in headless Chrome with Playwright: desktop/mobile layouts at 320–1440 px, all seven video sources, tabs and keyboard controls, every result selector, the schematic, reduced-motion behavior, static fallbacks, file URLs, and local links. The current revision passes 82 checks. Fifteen additional browser checks verify the overview numbers, fair table emphasis, bound/period flags, all three snapshot images, mobile image scrolling, and static fallbacks. Videos pause when another video starts. The helper and its `checks/` output are excluded from this public repository.

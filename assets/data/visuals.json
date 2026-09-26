@@ -1,0 +1,42 @@
+{
+  "scope": "Recorded MuJoCo simulation states, rendered for the private manuscript. No new physical experiments.",
+  "figures": [
+    {
+      "task": "writing",
+      "image": "assets/images/writing-snapshots.png",
+      "width": 2100,
+      "height": 972,
+      "sha256": "2418f5a5527917ddb6b511bb4d5ea968f5afc66a6f404f8473438989788cd04c",
+      "sourceFigureSha256": "19686fef622e92d8469b23eb055d6ff5e52bef2a01b0b4eebf306578f6156833"
+    },
+    {
+      "task": "dualarm",
+      "image": "assets/images/dualarm-snapshots.png",
+      "width": 2100,
+      "height": 604,
+      "sha256": "caacf3e0cf5932c0bef7d355146dcb179d20d68c3fd8adce5ebda547e9810c33",
+      "sourceFigureSha256": "0630f648473861a04afd41bf5969993fd157681bd3639b47318dd630d6c3230b"
+    },
+    {
+      "task": "waiter",
+      "image": "assets/images/waiter-snapshots.png",
+      "width": 2100,
+      "height": 1209,
+      "sha256": "420a21e29a5b841cbf3ce0a391bc72b020b6098ae0af5539c9666e8fbeb51a0c",
+      "sourceFigureSha256": "ebebefadb1b6dd9d6960cca78e2655a6e7328e6cbf62eba474404e6b2733e0ba"
+    }
+  ],
+  "recordingHashes": {
+    "camp_manifold.npz": "bbd2ed9c653193d76cf4cdcb6921d3a9b0541b1984b6132ce0b2c007b1e9d88e",
+    "dual_anchor.npz": "d06adadec453a8874a8fa5b8f7c75c447770078427fd01953dcd54472dac27a4",
+    "dual_noineq.npz": "19b012f3bcd3cf2b837b9e3b81a6d807910eb10dd6e96df58997da97a076f1d5",
+    "dual_pr.npz": "729d164576cd4927ef8deae8e2873993d10ab815319cd49d0f6f8815e9c4dae4",
+    "dual_unified.npz": "9a0cd4f51d8095a971d718033573f501c1a58e0b86885c33e28d7cbaccc951fa",
+    "pr_lift.npz": "330d6f2168a9bbde1487d98008315fe3146d3e1ff9f514db8f9413d3589cd58b",
+    "pr_press.npz": "79e39c248f033ebb7c17831021fca5e9757df7d0cc6eb01a88ee265d4e68e00d",
+    "unified.npz": "0e3d18d3fc8f49364578a790ea3886eacd24840e6e8d892764ed2d0a9101fc9b",
+    "waiter_cop.npz": "730f71a46bccd69b59abadb4c4b3d1175796a02216ae29bf0b2375cad50a4de4",
+    "waiter_nominal.npz": "5d26206c6e99c0ed7c701ed1a33bb2c4d1ee6b1b5bb24775f7d77ac9738e5362",
+    "waiter_robust.npz": "adeb1b481e8c0c8c78ae05e15ce06e97050c11b4a28dd4216e1bc95c1f77e871"
+  }
+}
