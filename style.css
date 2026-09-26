@@ -56,7 +56,7 @@ h3 { letter-spacing: -.025em; }
 .menu-toggle { display: none; border: 0; background: transparent; padding: 10px 0 10px 16px; font-size: 13px; }
 .hero { color: #f4f5ed; background: var(--dark); overflow: hidden; }
 .hero-layout { display: grid; grid-template-columns: 1fr 1.1fr; align-items: center; gap: 0; padding-top: 64px; padding-bottom: 56px; }
-.hero-copy { position: relative; z-index: 2; padding-block: 20px; }
+.hero-copy { position: relative; z-index: 2; min-width: 0; padding-block: 20px; }
 .hero .eyebrow { color: #adbfc6; font-size: 9px; letter-spacing: .115em; }
 .status-dot { display: inline-block; width: 5px; height: 5px; background: var(--lime); border-radius: 50%; margin-right: 9px; vertical-align: 2px; }
 .wordmark { display: block; font-size: clamp(66px, 7.6vw, 108px); line-height: 1.12; letter-spacing: -.07em; font-weight: 660; margin: 24px 0 20px; white-space: nowrap; }
@@ -65,7 +65,8 @@ h3 { letter-spacing: -.025em; }
 .hero-lead { margin-top: 27px; color: #b8c4c9; font-size: 17px; line-height: 1.6; letter-spacing: -.01em; }
 .hero-lead em { color: #e2eabf; font-style: normal; }
 .byline { margin-top: 22px; color: #a6b6be; font-size: 12px; }
-.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 23px; }
+.actions { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); width: 100%; max-width: 340px; gap: 10px; margin-top: 23px; }
+.actions .button { min-width: 0; gap: 12px; padding-inline: 12px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 24px; min-height: 48px; padding: 12px 17px; border: 1px solid transparent; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: 630; transition: background .2s, border-color .2s; }
 .primary { background: var(--lime); color: #182619; }
 .primary:hover { background: #e5f1c3; }
