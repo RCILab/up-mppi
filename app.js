@@ -43,9 +43,9 @@
   let wantsPlayback = !reducedMotion.matches && !navigator.connection?.saveData;
   let heroVisible = false;
   const sceneInfo = {
-    dualarm: ["01", "CLOSED-CHAIN MANIPULATION", "Two arms. One constrained motion.", "Simulated dual-arm transport using the unified controller", "Saved UP-MPPI dual-arm trajectory at 2 mm base error. Re-rendered at 1× speed; comparison film below."],
-    writing: ["02", "CURVED-SURFACE INTERACTION", "Follow the surface. Regulate the force.", "Simulated surface writing using the unified controller", "Saved UP-MPPI surface-writing trajectory at zero board offset. Re-rendered at 1× speed; comparison film below."],
-    waiter: ["03", "UNCERTAIN PAYLOAD · TRACKED VARIANT", "Learn the load as the robot moves.", "Simulated tray transport with tracked-position set-membership adaptation", "Saved adaptive-tracked trajectory, with object position available. Re-rendered at 1× speed; the comparison film plays at 0.5×."]
+    waiter: ["01", "UNCERTAIN PAYLOAD · F/T-ONLY ADAPTATION", "Learn the load as the robot moves.", "Simulated tray transport with force-torque-only COP adaptation", "Raw average, final projection, and COP-difference adaptation using F/T measurements. Seed 0 at 1× speed; comparison film below."],
+    dualarm: ["02", "CLOSED-CHAIN MANIPULATION", "Two arms. One constrained motion.", "Simulated dual-arm transport using the unified controller", "UP-MPPI with the raw update at 2 mm base error. Seed 0, re-rendered at 1× speed; comparison film below."],
+    writing: ["03", "CURVED-SURFACE INTERACTION", "Follow the surface. Constrain the reaction.", "Simulated surface writing using the unified controller", "UP-MPPI with the raw update at zero board offset. Seed 0, re-rendered at 1× speed. Measured force statistics are reported below."]
   };
   function updatePlayButton() {
     const playing = !heroVideo.paused;
@@ -80,8 +80,8 @@
       item.classList.toggle("active", selected);
     });
     heroVideo.pause();
-    heroVideo.poster = `assets/images/hero-${key}.jpg`;
-    heroVideo.src = `assets/videos/hero-${key}.mp4`;
+    heroVideo.poster = `assets/images/hero-${key}.jpg?v=alg1`;
+    heroVideo.src = `assets/videos/hero-${key}.mp4?v=alg1`;
     heroVideo.setAttribute("aria-label", label);
     $("#hero-count").textContent = `${index} / 03`;
     $("#hero-category").textContent = category;
@@ -181,11 +181,17 @@
       const [x,y] = toScreen(p), [xx,yy] = toScreen(projected[i]);
       return `<path d="M${x} ${y}L${xx} ${yy}" stroke="#879979" stroke-width=".9" opacity=".6"/>`;
     }).join("");
-    const weights = projected.map(([x,y]) => Math.exp(-((x-.6)**2+2*(y-.35)**2)));
+    const weights = projected.map(([x,y]) => Math.exp(-4*((x-2)**2+2*(y-.65)**2)));
     const sum = weights.reduce((a,b) => a+b,0);
-    const average = projected.reduce((a,p,i) => [a[0]+p[0]*weights[i]/sum,a[1]+p[1]*weights[i]/sum],[0,0]);
-    const [x,y] = toScreen(average);
-    $("#weighted-mean").setAttribute("transform", `translate(${x} ${y})`);
+    const average = samples => samples.reduce((a,p,i) => [a[0]+p[0]*weights[i]/sum,a[1]+p[1]*weights[i]/sum],[0,0]);
+    const rawMean = average(raw), projectedMean = average(projected);
+    const final = project(rawMean, region, band);
+    [["#raw-mean",rawMean],["#projected-mean",projectedMean],["#weighted-mean",final]].forEach(([id,p]) => {
+      const [x,y] = toScreen(p);
+      $(id).setAttribute("transform", `translate(${x} ${y})`);
+    });
+    const [rx,ry] = toScreen(rawMean), [fx,fy] = toScreen(final), [px,py] = toScreen(projectedMean);
+    $("#mean-paths").innerHTML = `<path d="M${rx} ${ry}L${fx} ${fy}" stroke="#b76645" stroke-width="2" stroke-dasharray="4 3"/><path d="M${px} ${py}L${fx} ${fy}" stroke="#6485b2" stroke-width="2"/>`;
     $("#uncertainty-value").textContent = value < 33 ? "Low" : value < 67 ? "Moderate" : "High";
     $("#uncertainty").setAttribute("aria-valuetext", `${value}% illustrative uncertainty`);
   }
@@ -201,7 +207,7 @@
   function bars(container, items, max, unit, digits) {
     $$(".bar-row", container).forEach((row,i) => {
       const item = items[i];
-      $(".bar",row).style.width = `${100*item.value/max}%`;
+      $(".bar",row).style.width = `${Math.max(0,Math.min(100,100*item.value/max))}%`;
       $("strong",row).innerHTML = `${item.value.toFixed(digits)} <small>${unit}</small>`;
     });
     container.setAttribute("aria-label", items.map(item => `${item.label}: ${item.value.toFixed(digits)} ${unit}`).join("; "));
@@ -217,13 +223,25 @@
     const names = [["robust","Robust prior"],["adaptive-cop","Adaptive F/T only"],["adaptive-tracked","Adaptive tracked"],["oracle","Oracle"]];
     const items = names.map(([key,label]) => ({label, value: results.waiterSweep[`${key}|${h}`].rmse2}));
     bars($("#waiter-chart"),items,55,"mm",1);
-    const gap = 100*(items[0].value-items[1].value)/(items[0].value-items[3].value);
-    $("#gap-value").textContent = `${Math.round(gap)}%`;
+    const denominator = items[0].value-items[3].value;
+    const gap = Math.abs(denominator) > 1e-8 ? 100*(items[0].value-items[1].value)/denominator : null;
+    $("#gap-value").textContent = gap === null ? "—" : `${Math.round(gap)}%`;
     const nominal = results.waiterSweep[`nominal|${h}`];
-    $("#waiter-outcomes").textContent = `At h = ${h} m: nominal tipped in ${nominal.tipped}/${nominal.n} runs; each plotted method tipped in 0/${nominal.n}. `+(nominal.tipped ? "Nominal tracking is omitted because some or all runs terminated early." : "The nominal model is excluded from the robust-to-oracle comparison.");
+    const outcomes = names.map(([key,label]) => { const r = results.waiterSweep[`${key}|${h}`]; return `${label}: ${r.tipped}/${r.n}`; });
+    $("#waiter-outcomes").textContent = `At h = ${h} m, tipped runs — nominal: ${nominal.tipped}/${nominal.n}; ${outcomes.join("; ")}. `+(nominal.tipped ? "Nominal tracking is omitted because runs terminated early." : "Nominal is excluded from this robust-to-oracle comparison.");
+  }
+  function updateAveraging() {
+    const move = $("#averaging-move").value;
+    const methods = [["projected","Projected average"],["raw","Raw + final projection"]];
+    const items = methods.map(([key,label]) => ({label,value:results.averaging[key][move]}));
+    bars($("#averaging-chart"),items,70,"mm",1);
+    $("#averaging-gain").textContent = `${Math.round(100*(1-items[1].value/items[0].value))}%`;
+    $("#averaging-announcement").textContent = `${move === "rmse1" ? "First" : "Second"} move: ` + $("#averaging-chart").getAttribute("aria-label");
   }
   $("#offset").addEventListener("change",updateDual);
   $("#height").addEventListener("change",updateWaiter);
+  $("#averaging-move").addEventListener("change",updateAveraging);
   updateDual();
   updateWaiter();
+  updateAveraging();
 })();
